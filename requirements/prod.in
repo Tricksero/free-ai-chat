@@ -1,0 +1,17 @@
+certifi
+cffi
+charset-normalizer
+colorama
+cryptography
+gpt4all
+greenlet
+idna
+pycparser
+pycryptodome
+PyMySQL
+requests
+SQLAlchemy
+SQLAlchemy-Utils
+tqdm
+typing_extensions
+urllib3
