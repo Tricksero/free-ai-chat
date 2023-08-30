@@ -4,7 +4,7 @@ services:
   db:
     image: mysql:8.0
     volumes:
-      - mysql_data:/var/lib/mysql/data/
+      - mysql_data:/var/lib/mysql/
     environment:
       - MYSQL_ROOT_PASSWORD=gpt4all
       - MYSQL_DATABASE=gpt4all

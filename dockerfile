@@ -10,15 +10,17 @@ WORKDIR /gpt4all
 COPY ./requirements ./requirements
 
 COPY . .
+COPY ./setup.sh /setup.sh
 
 EXPOSE 8000
 
-RUN python -m venv venv && \
-    . venv/bin/activate && \
-    pip install -r requirements.txt && \
-    python gpt4all_test.py
+#RUN python -m venv venv && \
+#. venv/bin/activate && \
+#pip install -r requirements.txt && \
+#python gpt4all_test.py
 
-RUN chmod +x setup.sh
+RUN ls
+RUN chmod +x /setup.sh
 
 
-CMD ["/bin/bash", "-c", "./setup.sh"]
+CMD ["/bin/bash", "-c", "/setup.sh"]
