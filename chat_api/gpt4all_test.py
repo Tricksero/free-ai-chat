@@ -41,6 +41,15 @@ class chat:
         self.model.load_session(new_chat)
         self.model.generate(new_msg)
         
+    def save_session(self) -> list:
+        # das müsste alles sein
+        return self.model.save_session()
+
+    def load_session(self, chat_session: list):
+        self.model.load_session(chat_session)
+    
+    def __del__(self):
+        return self.model.__del__()
     
     def change_model(self, new_model_name):
         chat = self.model.save_session()
