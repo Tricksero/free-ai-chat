@@ -34,6 +34,9 @@ class chat:
 
     def new_message(self, msg: str):
         return self.model.generate(msg)
+    
+    def new_message_stream(self, msg: str):
+        yield self.model.generate(msg, streaming=True)
 
     def change_msg(self, new_msg: str, index: str):
         old_chat = self.model.save_session()
