@@ -34,6 +34,9 @@ class chat:
 
     def new_message(self, msg: str):
         return self.model.generate(msg)
+    
+    def new_message_stream(self, msg: str):
+        yield self.model.generate(msg, streaming=True)
 
     def change_msg(self, new_msg: str, index: str):
         old_chat = self.model.save_session()
@@ -41,6 +44,15 @@ class chat:
         self.model.load_session(new_chat)
         self.model.generate(new_msg)
         
+    def save_session(self) -> list:
+        # das müsste alles sein
+        return self.model.save_session()
+
+    def load_session(self, chat_session: list):
+        self.model.load_session(chat_session)
+    
+    def __del__(self):
+        return self.model.__del__()
     
     def change_model(self, new_model_name):
         chat = self.model.save_session()
