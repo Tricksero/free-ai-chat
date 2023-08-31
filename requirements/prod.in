@@ -1,3 +1,4 @@
+django<5
 certifi
 cffi
 charset-normalizer

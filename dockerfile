@@ -7,9 +7,6 @@ RUN apt-get update && apt-get install -y redis-server
 
 WORKDIR /gpt4all
 
-COPY ./requirements ./requirements
-
-COPY . .
 COPY ./setup.sh /setup.sh
 
 EXPOSE 8000
