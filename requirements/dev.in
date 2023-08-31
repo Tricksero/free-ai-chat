@@ -1,6 +1,9 @@
 -r prod.in
 
+# utility
 invoke
 pip-tools
+
+# quality assurance
 mypy
 pylint

@@ -1,0 +1,46 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PID Service</title>
+        <link rel="stylesheet"
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+              integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+              crossorigin="anonymous">
+    </head>
+    <body>
+        <main class="container mt-5">
+            <div class="col col-xl-12 card border p-0 mb-3 mx-auto"
+                 style="width: 34rem">
+                <div class="card-header">
+                    <img class="card-img-top"
+                         src="https://www.uni-duesseldorf.de/home/fileadmin/images/uni_duesseldorf_logo.svg"
+                         alt="Logo der HHU">
+                </div>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">{% translate "PID-Service" %}</h5>
+                        <p class="card-text "></p>
+                        <div class="container">
+                            {% csrf_token %}
+                            <form method="post" novalidate>
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" class="btn btn-primary">{% translate "button-submit" %}</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script>
+        document.addEventListener("load", function(){
+            document.getElementById("id_username").focus()
+        });
+        </script>
+    </body>
+</html>
