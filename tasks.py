@@ -1,3 +1,9 @@
+"""
+This is a helper script to build the project.
+This task.py is not supposed to be bundled into the finished project and should
+only be used to define utility function that would be usefull as a cli function
+during development.
+"""
 import os
 import sys
 import datetime
@@ -25,6 +31,9 @@ with open(BASE_DIR / 'version', 'r') as f:
 
 
 def get_current_build():
+    """
+    Used by several functions to get the most recent build.
+    """
     build_path = Path("./build/") / f"{PROJECT_NAME}-{VERSION}.pyz"
     if build_path.is_file():
         return build_path
@@ -34,16 +43,17 @@ def get_current_build():
 
 @task
 def test(c):
+    """
+    Specify tests to run before packaging.
+    """
     pass
-
-
-@task
-def makemessages(c):
-    c.run(f"python manage.py makemessages -l en -i venv")
-
 
 @task
 def sync(c, skip_compile=False, update=False, dry_run=False):
+    """
+    Uses the pip-tools functions compile and sync to download the most stable
+    dependency configuration for your current system.
+    """
     c.run(f"pip install pip-tools")
     if skip_compile:
         print('skipping compiling ...')
@@ -56,6 +66,10 @@ def sync(c, skip_compile=False, update=False, dry_run=False):
 
 @task
 def build(c):
+    """
+    Builds the current project with a bundler tool.
+    For now it only supports shiv.
+    """
     if Path("./build/").is_dir():
         if Path(f"./build/{PROJECT_NAME}-{VERSION}.pyz").is_file():
             response = input(f"Version {VERSION} existiert bereits. Trotzdem bauen und ersetzen? y/n: ")
@@ -88,6 +102,13 @@ def build(c):
 
 
 def deploy_to_target(c, target):
+    """
+    Generic function taking a target and deploying the project to it
+    how the deployment works may be adjusted to the current project depending
+    on your target system.
+    args:
+        target (string): ssh target to deploy the bundled project to
+    """
     build_path = get_current_build()
 
     project_path = f"/home/{PROJECT_NAME}/{PROJECT_NAME}"
@@ -109,9 +130,12 @@ def deploy_to_target(c, target):
 
     print(f'deployment abgeschlossen {datetime.datetime.now()}')
 
- 
+
 @task
 def deploy_test(c):
+    """
+    Should be used to deploy the project the target_test defined in .invoke.yml
+    """
     user_input = input(f'Möchtest du den build "{PROJECT_NAME}-{VERSION}.pyz" auf dem Test-Server veröffentlichen? Tippe "test": ')
     if user_input == 'test':
         deploy_to_target(c, c['target_test'])
@@ -120,6 +144,9 @@ def deploy_test(c):
 
 @task
 def deploy_prod(c):
+    """
+    Should be used to deploy the project the target_prod defined in .invoke.yml
+    """
     user_input = input(f'Möchtest du den build "{PROJECT_NAME}-{VERSION}.pyz" auf dem Produktiv-Server veröffentlichen? Tippe "produktiv": ')
     if user_input == 'produktiv':
         deploy_to_target(c, c['target_prod'])
@@ -127,8 +154,11 @@ def deploy_prod(c):
         print('breche ab')
 
 
-@task 
+@task
 def create_sphinxdoc(c, module_dir=BASE_DIR):
+    """
+    Creates a documentation using sphinx but its still WIP.
+    """
     print(f"Generate .rst files of {module_dir}")
     c.run(f"sphinx-apidoc -o docs/source/_templates {module_dir}")
     print("build html")
@@ -140,7 +170,8 @@ import tasks
 @task
 def example_invoke_task(ctx):
     """
-    Generates an ugly yet usefull documentation file of tasks.py
+    Generates an documentation file of tasks.py. Its experimental, ugly
+    and pretty redundant when you have to describe this file in a readme anyway.
     """
     with open(f"{BASE_DIR}/docs/source/invoke.rst", "w") as module_file:
         module_file.write("invoke \n======== \n\n")
@@ -164,11 +195,19 @@ def example_invoke_task(ctx):
 
 @task
 def create_translation(c, translation="en"):
+    """
+    Generates file out of translation strings and compiles all available translations.
+    args:
+        translation (string): language code used by django
+    """
     c.run(f"python manage.py makemessages -i venv --locale {translation} --domain django")
     c.run(f"python manage.py compilemessages --locale {translation}")
 
 @task
 def create_all_translations(c, ignore=None):
+    """
+    Generates all translations for a list of language strings.
+    """
     supportet_languages = ["en", "de"]
     for lang in supportet_languages:
         create_translation(c, lang)
