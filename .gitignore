@@ -164,3 +164,5 @@ cython_debug/
 **/config.ini
 **/plan/
 **/.devcontainer
+requirements/**.txt
+.invoke.yml
