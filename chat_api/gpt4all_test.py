@@ -12,6 +12,12 @@ import concurrent.futures
 
 # TODO LLAMA 2 auch einbinden: https://www.youtube.com/watch?v=yGhjB3MZr3c
 
+# https://github.com/facebookresearch/llama/issues/483
+
+# https://towardsdatascience.com/fine-tune-your-own-llama-2-model-in-a-colab-notebook-df9823a04a32?gi=88780445931c
+
+# https://www.youtube.com/watch?v=LslC2nKEEGU
+
 class GPT4ALL(GPT4AllBaseClass):
     def __init__(self, model_name: str, model_path: str | None = None, model_type: str | None = None, allow_download: bool = True, n_threads: int | None = None):
         super().__init__(model_name, model_path, model_type, allow_download, n_threads)
@@ -124,4 +130,4 @@ def model_with_out_download_avaible():
 
 
 if __name__ == "__main__":
-    download_model("nous-hermes-13b.ggmlv3.q4_0.bin")
+    download_model("llama-2-7b-chat.ggmlv3.q4_0.bin")
