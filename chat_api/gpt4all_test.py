@@ -7,7 +7,7 @@ import json
 import os
 
 # das hier testen
-
+#ausprobieren, ob auch andere models von hugging face hier schon einlesbar sind.
 
 class GPT4ALL(GPT4AllBaseClass):
     def __init__(self, model_name: str, model_path: str | None = None, model_type: str | None = None, allow_download: bool = True, n_threads: int | None = None):
@@ -25,7 +25,7 @@ class GPT4ALL(GPT4AllBaseClass):
         return self.save_session()
 
 
-class chat:
+class Chat:
     def __init__(self, model_name: str | None = None, token = 200) -> None:
         self.model_name = model_name
         self.model = GPT4ALL(model_name)
@@ -61,7 +61,7 @@ class chat:
         self.model.load_session(chat)
 
 
-def download_model(model: str):
+def download_model(model: str): #überarbeiten, das geht viel direkter
     model = GPT4ALL(model)
     del model
 
