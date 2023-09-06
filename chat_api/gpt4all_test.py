@@ -5,9 +5,12 @@ import gpt4all
 from gpt4all import GPT4All as GPT4AllBaseClass
 import json
 import os
+import concurrent.futures
 
 # das hier testen
 #ausprobieren, ob auch andere models von hugging face hier schon einlesbar sind.
+
+# TODO LLAMA 2 auch einbinden: https://www.youtube.com/watch?v=yGhjB3MZr3c
 
 class GPT4ALL(GPT4AllBaseClass):
     def __init__(self, model_name: str, model_path: str | None = None, model_type: str | None = None, allow_download: bool = True, n_threads: int | None = None):
@@ -36,7 +39,7 @@ class Chat:
         return self.model.generate(msg)
     
     def new_message_stream(self, msg: str):
-        yield self.model.generate(msg, streaming=True)
+        yield self.model.generate(msg, streaming=True) #dringend testen
 
     def change_msg(self, new_msg: str, index: str):
         old_chat = self.model.save_session()
@@ -61,12 +64,28 @@ class Chat:
         self.model.load_session(chat)
 
 
-def download_model(model: str): #überarbeiten, das geht viel direkter
-    model = GPT4ALL(model)
-    del model
+def download_model(model: str):
+
+    if os.path.exists(get_save_path()+model):
+        return "model all ready exist"
+
+    model_name = gpt4all.gpt4all.append_bin_suffix_if_missing(model)
+    GPT4AllBaseClass.download_model(
+                model_name, get_save_path())
+    return model + " is downloaded to " + get_save_path()
 
 def get_list_of_all_models():
     return GPT4ALL.list_models()
+
+def download_all_models():
+    model_names = [model["filename"] for model in get_list_of_all_models()]
+    results = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(model_names)) as executor: 
+        #use multithreading to execute downloads at the same time.
+        response = [executor.submit(download_model, model_name) for model_name in model_names]
+        for i in concurrent.futures.as_completed(response):
+            results.append(i.result())
+
 
 def get_save_path():
     return gpt4all.gpt4all.DEFAULT_MODEL_DIRECTORY
