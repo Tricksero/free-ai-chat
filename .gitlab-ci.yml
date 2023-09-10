@@ -18,6 +18,7 @@
 
 image: python:3.11.4-bullseye
 
+
 stages:          # List of stages for jobs, and their order of execution
   - test
 
