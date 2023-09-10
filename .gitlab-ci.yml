@@ -28,7 +28,10 @@ unit-test-job:   # This job runs in the test stage.
     - echo "Running unit tests..."
     - apt-get update && apt upgrade -y
     - python -m venv venv
-    - ls
+    - source venv/bin/activate
+    - pip install invoke pip-tools
+    - inv sync
+    - python chat_api/test.py
     - echo "Code coverage is x%"
 
 lint-test-job:   # This job also runs in the test stage.
@@ -38,7 +41,8 @@ lint-test-job:   # This job also runs in the test stage.
     - apt-get update && apt upgrade -y
     - python -m venv venv
     - source venv/bin/activate
-    - pip install pylint mypy
+    - pip install invoke pip-tools
+    - inv sync
     - mypy ./
     - pylint ./
     - echo "add lint for html and js."
