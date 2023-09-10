@@ -1,16 +1,13 @@
-import time
-from typing import Optional
-import typing
-import gpt4all
-from gpt4all import GPT4All as GPT4AllBaseClass
-import json
+"""
+Allgemeine GPT4ALL chat API.
+"""
 import os
 import concurrent.futures
+import gpt4all
+from gpt4all import GPT4All as GPT4AllBaseClass
 
 # das hier testen
 #ausprobieren, ob auch andere models von hugging face hier schon einlesbar sind.
-
-# TODO LLAMA 2 auch einbinden: https://www.youtube.com/watch?v=yGhjB3MZr3c
 
 # https://github.com/facebookresearch/llama/issues/483
 
@@ -23,15 +20,12 @@ class GPT4ALL(GPT4AllBaseClass):
         super().__init__(model_name, model_path, model_type, allow_download, n_threads)
 
     def save_session(self) -> list:
-        self.current_chat_session
         # das müsste alles sein
         return self.current_chat_session
 
     def load_session(self, chat_session: list):
         self.current_chat_session = chat_session
-    
-    def __del__(self):
-        return self.save_session()
+
 
 
 class Chat:
@@ -43,26 +37,24 @@ class Chat:
 
     def new_message(self, msg: str):
         return self.model.generate(msg)
-    
+
     def new_message_stream(self, msg: str):
-        yield self.model.generate(msg, streaming=True) #dringend testen
+        return self.model.generate(msg, streaming=True) #dringend testen
 
     def change_msg(self, new_msg: str, index: str):
         old_chat = self.model.save_session()
         new_chat = old_chat[:index]
         self.model.load_session(new_chat)
         self.model.generate(new_msg)
-        
+
     def save_session(self) -> list:
         # das müsste alles sein
         return self.model.save_session()
 
     def load_session(self, chat_session: list):
         self.model.load_session(chat_session)
-    
-    def __del__(self):
-        return self.model.__del__()
-    
+
+
     def change_model(self, new_model_name):
         chat = self.model.save_session()
         self.model_name = new_model_name
@@ -71,8 +63,8 @@ class Chat:
 
 
 def download_model(model: str):
-
-    if os.path.exists(get_save_path()+model):
+    # print(get_save_path()+"/"+model)
+    if os.path.exists(get_save_path()+"/"+model):
         return "model all ready exist"
 
     model_name = gpt4all.gpt4all.append_bin_suffix_if_missing(model)
@@ -86,7 +78,7 @@ def get_list_of_all_models():
 def download_all_models():
     model_names = [model["filename"] for model in get_list_of_all_models()]
     results = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=len(model_names)) as executor: 
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(model_names)) as executor:
         #use multithreading to execute downloads at the same time.
         response = [executor.submit(download_model, model_name) for model_name in model_names]
         for i in concurrent.futures.as_completed(response):
@@ -98,7 +90,7 @@ def get_save_path():
 
 def model_with_out_download_avaible():
     return [i for i in os.listdir(get_save_path()) if ".bin" in i]
-    
+
 
 # gpt4all.GPT4All.list_models()
 # with open("./model_names.json","r") as f:
