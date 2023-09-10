@@ -6,6 +6,8 @@ import concurrent.futures
 import gpt4all
 from gpt4all import GPT4All as GPT4AllBaseClass
 
+# gab ein gpt4all update da nach schauen, dass das dann wieder läuft?
+
 # das hier testen
 #ausprobieren, ob auch andere models von hugging face hier schon einlesbar sind.
 

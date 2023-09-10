@@ -4,15 +4,12 @@ cffi
 charset-normalizer
 colorama
 cryptography
-gpt4all
+gpt4all<1.0.9
 greenlet
 idna
 pycparser
 pycryptodome
-PyMySQL
 requests
-SQLAlchemy
-SQLAlchemy-Utils
 tqdm
 typing_extensions
 urllib3
