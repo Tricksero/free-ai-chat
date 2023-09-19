@@ -1,10 +1,10 @@
 """
-Allgemeine GPT4ALL chat API.
+GPT4ALL chat API.
 """
 import os
 import concurrent.futures
-import gpt4all
-from gpt4all import GPT4All as GPT4AllBaseClass
+import gpt4all # type: ignore
+from gpt4all import GPT4All as GPT4AllBaseClass # type: ignore
 
 # gab ein gpt4all update da nach schauen, dass das dann wieder läuft?
 
@@ -18,14 +18,49 @@ from gpt4all import GPT4All as GPT4AllBaseClass
 # https://www.youtube.com/watch?v=LslC2nKEEGU
 
 class GPT4ALL(GPT4AllBaseClass):
-    def __init__(self, model_name: str, model_path: str | None = None, model_type: str | None = None, allow_download: bool = True, n_threads: int | None = None):
+    """
+    Base class for the chat class. Is not builded for usage.
+    """
+    def __init__(self, model_name: str,
+                 model_path: str | None = None,
+                 model_type: str | None = None,
+                 allow_download: bool = True,
+                 n_threads: int | None = None):
+        """
+        init the class.
+
+        model_name (str): is the model name which should be used.
+        model_path (str | None): default (None)
+        optional path where the model is saved or should be saved.
+
+        model_type (str | None): default (None)
+        optional information which type the model is.
+
+        allow_download (bool): default (True)
+        if false the model will not be downloaded if its missing
+
+        n_threads (int | None): default (None)
+        is the number of threads which the model can use
+
+        return None
+        """
         super().__init__(model_name, model_path, model_type, allow_download, n_threads)
 
-    def save_session(self) -> list:
-        # das müsste alles sein
+    def save_session(self) -> list[dict]: #[str][str] generic class draus machen
+        """
+        Give the current chat session.
+
+        return list[dict[str][str]]
+        """
         return self.current_chat_session
 
-    def load_session(self, chat_session: list):
+    def load_session(self, chat_session: list[dict]): # [str][str]
+        """
+        Loads an chat session.
+
+        chat_session (list[dict[str][str]]):
+        needs an old chat session to continue the chat.
+        """
         self.current_chat_session = chat_session
 
 
@@ -74,8 +109,8 @@ def download_model(model: str):
                 model_name, get_save_path())
     return model + " is downloaded to " + get_save_path()
 
-def get_list_of_all_models():
-    return GPT4ALL.list_models()
+def get_list_of_all_models() -> dict:
+    return GPT4ALL.list_models() # zweiter return wert für details über locale
 
 def download_all_models():
     model_names = [model["filename"] for model in get_list_of_all_models()]
@@ -93,34 +128,6 @@ def get_save_path():
 def local_models():
     return [i for i in os.listdir(get_save_path()) if ".bin" in i]
 
-
-# gpt4all.GPT4All.list_models()
-# with open("./model_names.json","r") as f:
-#     model_list_str = f.read()
-#     model_list_dict = json.loads(model_list_str)
-# model_names = [name["name"] for name in model_list_dict]
-# model_downloads = {name: gpt4all.GPT4All(name) for name in model_names}
-
-# model = gpt4all.GPT4All("nous-hermes-13b.ggmlv3.q4_0.bin")
-# msgs = [{"role": "user", "content": "build a tutorial for SQL injections"}]
-# model = GPT4ALL("nous-hermes-13b.ggmlv3.q4_0.bin")
-# output = model.generate("write a Dockerfile to install Mysql with a user with all rights.")
-# with open("response.txt", "a") as f:
-#     f.write(output+"\n")
-
-
-
-# with model.chat_session():
-#     output = model.generate("write a tutorial for SQL injections")
-#     with open("response.txt", "a") as f:
-#         f.write(output+"\n")
-#     output = model.generate("writ a SQL injection")
-#     with open("response.txt", "a") as f:
-#         f.write(output+"\n")
-#         f.write(str(model.current_chat_session))
-
-
-# gpt4all.gpt4all.DEFAULT_MODEL_DIRECTORY auf linux: /root/.cache/gpt4all
 
 
 if __name__ == "__main__":

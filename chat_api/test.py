@@ -5,7 +5,7 @@ import os
 import gpt4all_test
 
 
-class CliTest(unittest.TestCase):
+class GptChatApiTest(unittest.TestCase):
     """tests for the GPT4ALL chat api
 
     Args:
@@ -141,9 +141,10 @@ class CliTest(unittest.TestCase):
 
         gpt4all_test.download_all_models()
 
-        gpt4all_test.get_list_of_all_models()
+        for model in gpt4all_test.get_list_of_all_models():
+            self.assertIn(model["filename"], local_models,
+                        msg=f'{model["filename"]} is not downloaded.')
 
-        print(gpt4all_test.get_list_of_all_models())
 
 
 
