@@ -1,8 +1,7 @@
 """tests for the gpt4all chat api
 """
-from pathlib import Path
-import subprocess
 import unittest
+import os
 import gpt4all_test
 
 
@@ -132,22 +131,23 @@ class CliTest(unittest.TestCase):
 
         self.assertEqual(check_download_all_ready, "model all ready exist", message)
 
-        # restlichen funktionen noch überprüfen
+        save_path = gpt4all_test.get_save_path()
+
+        local_models = os.listdir(save_path)
+
+        msg = 'the listed models are unequal to the models in the cache.'
+
+        self.assertEqual(gpt4all_test.local_models(), local_models, msg)
+
+        gpt4all_test.download_all_models()
+
+        gpt4all_test.get_list_of_all_models()
+
+        print(gpt4all_test.get_list_of_all_models())
 
 
-
-def run_pylint_and_mypy():
-    """
-    Run pylint and mypy tests
-    """
-    base_dir = Path(__file__).resolve().parent
-    print(base_dir)
-    subprocess.run(['pylint', base_dir], check=False)
-
-    subprocess.run(['mypy', base_dir],  check=False)
 
 
 # self.assertRaises(ValueError, function_that_raises) expect error
 if __name__ == '__main__':
     unittest.main()
-    run_pylint_and_mypy()
