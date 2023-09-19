@@ -90,7 +90,7 @@ def download_all_models():
 def get_save_path():
     return gpt4all.gpt4all.DEFAULT_MODEL_DIRECTORY
 
-def model_with_out_download_avaible():
+def local_models():
     return [i for i in os.listdir(get_save_path()) if ".bin" in i]
 
 
