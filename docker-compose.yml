@@ -36,3 +36,4 @@ services:
 volumes:
   postgres_data:
   #mysql_data:
+      - "3307:3306"
