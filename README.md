@@ -18,3 +18,8 @@ You can use `inv --list` to see all available commands and read their docstrings
 `inv <command_name> --help`
 to get more information about a single command.
 In case you want to expand this utility I suggest reading the introduction of the [invoke documentation](https://www.pyinvoke.org/).
+
+## apt dependencies
+```
+python3.11 python-dev libpq-dev
+```

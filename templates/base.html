@@ -2,11 +2,13 @@
 {% load i18n %}
 <!DOCTYPE html>
 <html lang="de">
+        
     <head>{% include "head.html" %}</head>
     <body
 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
     >
-        <header>
+    <div id="base-header-main-wrapper" class="h-screen flex flex-col">
+        <header class="">
             {% include "components/navbar.html" %}
             {% comment "" %}
             {% include "components/breadcrumb.html" %}
@@ -21,7 +23,7 @@ hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
 </div>
             {% endcomment %}
         </header>
-        <main>
+        <main class="flex flex-grow flex-col">
             {% if messages %}
                 <div class="container">
                     {% for message in messages %}
@@ -46,10 +48,11 @@ hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                     </div>
                 </div>
             {% endif %}
-            <div class="container" id="content">
+            <div class="w-10/12 m-8 h-full" id="content">
                 {% block content %}
                 {% endblock content %}
             </div>
         </main>
+    </div>
     </body>
 </html>

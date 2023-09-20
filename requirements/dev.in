@@ -7,3 +7,4 @@ pip-tools
 # quality assurance
 mypy
 pylint
+safety

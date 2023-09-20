@@ -1,0 +1,13 @@
+{% load i18n %}
+{% load static %}
+{% for question in conversation_log reversed %}
+<p>hi</p>
+<div id="question-{{ loop.count }}" class="w-full"
+    hx-post="{% url 'user_interface:chat-question' %}"
+    hx-vars="question:'{{ question }}'"
+    hx-target="#htmx-past-conversations"
+    hx-swap="innerHTML"
+    hx-trigger="load"
+>
+</div>
+{% endfor %}

@@ -36,13 +36,13 @@
                     <a class="nav-link {% if home_navlink_active %}active{% endif %}"
                        {% if home_navlink_active %}aria-current="page"{% endif %}
                        href="{% url 'user_interface:home' %}"
-                       aria-label="Übersicht">{% trans "menu-overview" context "following strings are used in the navigation" %}</a>
+                       aria-label="Übersicht">{% trans "menu-home" context "following strings are used in the navigation" %}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if home_navlink_active %}active{% endif %}"
                        {% if chat_navlink_active %}aria-current="page"{% endif %}
                        href="{% url 'user_interface:chat' %}"
-                       aria-label="Übersicht">{% trans "menu-overview" context "following strings are used in the navigation" %}</a>
+                       aria-label="Übersicht">{% trans "menu-chat" context "following strings are used in the navigation" %}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"

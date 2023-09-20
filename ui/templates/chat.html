@@ -1,5 +1,40 @@
-{% extends "base_template.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 {% load static %}
 {% block content %}
+<div id="chat-page-wrapper" class="w-full flex flex-row h-full">
+    <div id="conversations-wrapper" class="flex w-4/12 h-full">
+        <div id="htmx-past-conversations" class="w-full" 
+        hx-post="{% url 'user_interface:chat-conversation-list' %}"
+        hx-target="#htmx-past-conversations"
+        hx-swap="innerHTML"
+        hx-trigger="load"
+        >
+        <p>loading ...</p>
+        </div>
+    </div>
+    <div id="chat-body-wrapper" class="w-8/12 flex flex-col h-full">
+        <label for="language-model-placeholder">language-model-placeholder</label>
+        <select id="language-model-placeholder" name="language-model-placeholder">
+            <option value="language-model-1"></option>
+            <option value="language-model-2"></option>
+            <option value="language-model-3"></option>
+        </select>
+        <p>conversation log</p>
+        <div id="conversation-log" class="w-full flex flex-col flex-grow h-full"
+        hx-post="{% url 'user_interface:chat-conversation-log' %}"
+        hx-target="#conversation-log"
+        hx-swap="innerHTML"
+        hx-trigger="load"
+        >
+        load ...
+        </div>
+        <div id="question-input-wrapper" class="flex align-bottom">
+            <form>
+                {% csrf_token %}
+                <button type="submit" name="question">{% trans "send-question-button" %}</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
