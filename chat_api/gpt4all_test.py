@@ -78,7 +78,7 @@ class Chat:
     def new_message_stream(self, msg: str):
         return self.model.generate(msg, streaming=True) #dringend testen
 
-    def change_msg(self, new_msg: str, index: str):
+    def change_msg(self, new_msg: str, index: int):
         old_chat = self.model.save_session()
         new_chat = old_chat[:index]
         self.model.load_session(new_chat)

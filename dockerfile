@@ -3,7 +3,7 @@ FROM python:3.11.4-bullseye
 
 RUN apt-get update && apt upgrade -y
 
-RUN apt-get update && apt-get install -y redis-server
+RUN apt-get update && apt-get install -y redis-server libpcap0.8
 
 WORKDIR /gpt4all
 

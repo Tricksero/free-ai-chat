@@ -167,3 +167,5 @@ cython_debug/
 requirements/**.txt
 .invoke.yml
 **node_modules**
+**/venv_test
+**/venv_network
