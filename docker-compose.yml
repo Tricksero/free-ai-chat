@@ -1,27 +1,27 @@
 version: "3.9"
 
 services:
-  db:
-    image: mysql:8.0
-    volumes:
-      - mysql_data:/var/lib/mysql/
-    environment:
-      - MYSQL_ROOT_PASSWORD=gpt4all
-      - MYSQL_DATABASE=gpt4all
-      - MYSQL_USER=gpt4all
-      - MYSQL_PASSWORD=gpt4all
-    ports:
-      - "3307:3306"
   #db:
-    #image: postgres:14
+    #image: mysql:8.0
     #volumes:
-      #- postgres_data:/var/lib/postgresql/data/
+      #- mysql_data:/var/lib/mysql/
     #environment:
-      #- POSTGRES_DB=pid_service
-      #- POSTGRES_USER=pid_service
-      #- POSTGRES_PASSWORD=pid_service
+      #- MYSQL_ROOT_PASSWORD=gpt4all
+      #- MYSQL_DATABASE=gpt4all
+      #- MYSQL_USER=gpt4all
+      #- MYSQL_PASSWORD=gpt4all
     #ports:
-      #- "5433:5432"
+      #- "3307:3306"
+  db:
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=gpt4all
+      - POSTGRES_USER=gpt4all
+      - POSTGRES_PASSWORD=gpt4all
+    ports:
+      - "5433:5432"
   web:
     build:
       context: .
@@ -34,5 +34,5 @@ services:
     links:
       - db
 volumes:
-  #postgres_data:
-  mysql_data:
+  postgres_data:
+  #mysql_data:

@@ -16,3 +16,4 @@ urllib3
 # frontend modules
 django<5
 django-widget-tweaks
+psycopg2

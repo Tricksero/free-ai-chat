@@ -1,0 +1,72 @@
+{
+  "name": "chatgpt4all",
+  "version": "1.0.0",
+  "description": "Init",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "wipe": "rm -rf src/",
+    "tailwind": "npx tailwindcss -c assets/tailwind/tailwind.config.js -i assets/tailwind/input.css -o src/tailwind/tailwind.css --minify --watch",
+    "dev-server": "npm run wipe && webpack serve --config webpack_conf/webpack.dev.config.js --progress --stats=verbose --mode=development",
+    "production": "npm run wipe && webpack --config webpack_conf/webpack.prod.config.js --mode=production",
+    "lint:sass": "sass-lint -v -q",
+    "lint:js": "eslint --ext .js src/js/",
+    "stats": "webpack --config webpack_conf/webpack.prod.config.js --mode=production --json > dist/stats.json && webpack-bundle-analyzer dist/stats.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.hhu.de/zim-azubis/pid-service.git"
+  },
+  "author": "ZIM Azubis",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.22.6",
+    "@babel/eslint-parser": "^7.22.6",
+    "@babel/preset-env": "^7.12.17",
+    "autoprefixer": "^10.4.15",
+    "babel-loader": "^8.0.6",
+    "bootstrap-sass": "^3.3.7",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "create-react-context": "^0.3.0",
+    "css-loader": "^6.8.1",
+    "css-minimizer-webpack-plugin": "^5.0.1",
+    "eslint": "^8.44.0",
+    "eslint-webpack-plugin": "^4.0.1",
+    "html-webpack-plugin": "^5.5.3",
+    "image-minimizer-webpack-plugin": "^3.8.3",
+    "imagemin": "^8.0.1",
+    "interactjs": "^1.10.17",
+    "mini-css-extract-plugin": "^2.7.6",
+    "postcss-loader": "^7.3.3",
+    "prop-types": "^15.8.1",
+    "sass": "^1.63.6",
+    "sass-loader": "^13.3.2",
+    "style-loader": "^3.3.3",
+    "tailwindcss": "^3.3.2",
+    "webpack": "^5.87.0",
+    "webpack-bundle-tracker": "^2.0.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "bootstrap-sass": "^3.4.3",
+    "caniuse-lite": "^1.0.30001512",
+    "datatables.net-bs5": "^1.13.6",
+    "datatables.net-buttons-bs5": "^2.4.1",
+    "datatables.net-buttons-dt": "^2.4.1",
+    "datatables.net-dt": "^1.13.6",
+    "datatables.net-select-dt": "^1.7.0",
+    "htmx.org": "^1.9.4",
+    "install": "^0.13.0",
+    "jquery": "^3.7.0",
+    "jszip": "^3.10.1",
+    "moment": "^2.29.4",
+    "node": "^20.3.1",
+    "npm": "^9.8.1",
+    "pdfmake": "^0.2.7",
+    "randomcolor": "^0.6.2"
+  }
+}

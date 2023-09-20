@@ -11,7 +11,7 @@ def main():
 
     config = RawConfigParser()
     config.read(base_dir / 'config.ini')
-    django_settings_module = config['DJANGO']['SETTINGS_MODULE']
+    django_settings_module = config['SETTINGS']['DJANGO_SETTINGS_MODULE']
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', django_settings_module)
 

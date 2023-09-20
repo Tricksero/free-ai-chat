@@ -26,7 +26,6 @@
                         <h5 class="card-title">{% translate "PID-Service" %}</h5>
                         <p class="card-text "></p>
                         <div class="container">
-                            {% csrf_token %}
                             <form method="post" novalidate>
                                 {% csrf_token %}
                                 {{ form.as_p }}

@@ -166,3 +166,4 @@ cython_debug/
 **/.devcontainer
 requirements/**.txt
 .invoke.yml
+**node_modules**
