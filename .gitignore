@@ -166,3 +166,5 @@ cython_debug/
 **/.devcontainer
 requirements/**.txt
 .invoke.yml
+**/venv_test
+**/venv_network
