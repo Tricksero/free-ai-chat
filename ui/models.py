@@ -6,7 +6,7 @@ from django.db import models
 
 class Question(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True)
-    conversation = models.ForeignKey("Conversation")
+    conversation = models.ForeignKey("Conversation", on_delete=models.CASCADE)
     json = models.JSONField()
 
 class Conversation(models.Model):
