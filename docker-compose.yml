@@ -12,16 +12,7 @@ services:
       - MYSQL_PASSWORD=gpt4all
     ports:
       - "3307:3306"
-  #db:
-    #image: postgres:14
-    #volumes:
-      #- postgres_data:/var/lib/postgresql/data/
-    #environment:
-      #- POSTGRES_DB=pid_service
-      #- POSTGRES_USER=pid_service
-      #- POSTGRES_PASSWORD=pid_service
-    #ports:
-      #- "5433:5432"
+
   web:
     build:
       context: .
@@ -34,5 +25,4 @@ services:
     links:
       - db
 volumes:
-  #postgres_data:
   mysql_data:
