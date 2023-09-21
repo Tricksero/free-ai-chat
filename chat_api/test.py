@@ -2,7 +2,7 @@
 """
 import unittest
 import os
-import gpt4all_test
+import gpt4all_chat
 
 
 class GptChatApiTest(unittest.TestCase):
@@ -17,11 +17,11 @@ class GptChatApiTest(unittest.TestCase):
         """test the GPT4ALL class
         """
 
-        gpt_object = gpt4all_test.GPT4ALL("llama-2-7b-chat.ggmlv3.q4_0.bin")
+        gpt_object = gpt4all_chat.GPT4ALL("llama-2-7b-chat.ggmlv3.q4_0.bin")
 
         message = "The tests does not run on the right class."
 
-        self.assertIsInstance(gpt_object, gpt4all_test.GPT4ALL, message)
+        self.assertIsInstance(gpt_object, gpt4all_chat.GPT4ALL, message)
 
         # test generate a message
 
@@ -57,11 +57,11 @@ class GptChatApiTest(unittest.TestCase):
         """test the GPT4ALL class
         """
 
-        chat_object = gpt4all_test.Chat("llama-2-7b-chat.ggmlv3.q4_0.bin")
+        chat_object = gpt4all_chat.Chat("llama-2-7b-chat.ggmlv3.q4_0.bin")
 
         message = "The tests does not run on the right class."
 
-        self.assertIsInstance(chat_object, gpt4all_test.Chat, message)
+        self.assertIsInstance(chat_object, gpt4all_chat.Chat, message)
 
         # test generate a message
 
@@ -119,29 +119,31 @@ class GptChatApiTest(unittest.TestCase):
         """test all functions in the api.
         """
 
-        check_download_working = gpt4all_test.download_model("ggml-model-gpt4all-falcon-q4_0.bin")
+        check_download_working = gpt4all_chat.download_model("ggml-model-gpt4all-falcon-q4_0.bin")
 
         message = "Given model download was expected."
 
-        self.assertEqual(check_download_working, "ggml-model-gpt4all-falcon-q4_0.bin" + " is downloaded to " + gpt4all_test.get_save_path(), message)
+        self.assertEqual(check_download_working, "ggml-model-gpt4all-falcon-q4_0.bin" + " is downloaded to " + gpt4all_chat.get_save_path(), message)
 
-        check_download_all_ready = gpt4all_test.download_model("ggml-model-gpt4all-falcon-q4_0.bin")
+        check_download_all_ready = gpt4all_chat.download_model("ggml-model-gpt4all-falcon-q4_0.bin")
 
         message = "Given model is as all ready downloaded was expected."
 
         self.assertEqual(check_download_all_ready, "model all ready exist", message)
 
-        save_path = gpt4all_test.get_save_path()
+        save_path = gpt4all_chat.get_save_path()
 
         local_models = os.listdir(save_path)
 
         msg = 'the listed models are unequal to the models in the cache.'
 
-        self.assertEqual(gpt4all_test.local_models(), local_models, msg)
+        self.assertEqual(gpt4all_chat.local_models(), local_models, msg)
 
-        gpt4all_test.download_all_models()
+        gpt4all_chat.download_all_models()
 
-        for model in gpt4all_test.get_list_of_all_models():
+        local_models = os.listdir(save_path)
+
+        for model in gpt4all_chat.get_list_of_all_models():
             self.assertIn(model["filename"], local_models,
                         msg=f'{model["filename"]} is not downloaded.')
 

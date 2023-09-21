@@ -66,7 +66,7 @@ class GPT4ALL(GPT4AllBaseClass):
 
 
 class Chat:
-    def __init__(self, model_name: str | None = None, token = 200) -> None:
+    def __init__(self, model_name: str = "llama-2-7b-chat.ggmlv3.q4_0.bin", token = 200) -> None:
         self.model_name = model_name
         self.model = GPT4ALL(model_name)
         self.token = token
