@@ -4,9 +4,9 @@ from collections.abc import Callable, Iterable, Mapping
 from typing import Any
 import unittest
 import os
-import psutil
 import threading
 import time
+import psutil
 import gpt4all_chat
 
 
@@ -128,7 +128,10 @@ class GptChatApiTest(unittest.TestCase):
 
         message = "Given model download was expected."
 
-        self.assertEqual(check_download_working, "ggml-model-gpt4all-falcon-q4_0.bin" + " is downloaded to " + gpt4all_chat.get_save_path(), message)
+        self.assertEqual(check_download_working,
+                         "ggml-model-gpt4all-falcon-q4_0.bin" + \
+                            " is downloaded to " + \
+                                gpt4all_chat.get_save_path(), message)
 
         check_download_all_ready = gpt4all_chat.download_model("ggml-model-gpt4all-falcon-q4_0.bin")
 
@@ -174,9 +177,10 @@ def check_network_connection(network_connections):
     connections = psutil.net_connections(kind='inet')
     for conn in connections:
         if conn.status == 'ESTABLISHED'and conn.pid is not None:
-            a = str(conn)
-            print(a)
-            remote_adresses = [i.split("'")[1] for i in a.split(",") if "raddr=addr(ip" in i] # die strings sind immer gleich aufgebaut
+
+            remote_adresses = [
+                i.split("'")[1] for i in str(conn).split(",") if "raddr=addr(ip" in i]
+            # die strings sind immer gleich aufgebaut
             for i in remote_adresses:
                 if not "127.0.0.1" in i:
                     network_connections.append({
@@ -210,7 +214,7 @@ def test_models_for_security():
         new_traffic.running = False
 
         while new_traffic.runs:
-            time.sleep(2)
+            time.sleep(1)
 
         new_traffic_list = new_traffic.trafic
         new_traffic_list = [ str(i) for i in new_traffic_list]

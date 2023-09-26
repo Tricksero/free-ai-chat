@@ -28,7 +28,7 @@ unit-test-job:   # This job runs in the test stage.
   script:
     - echo "Running unit tests..."
     - apt-get update && apt upgrade -y
-    - apt-get install libpcap0.8
+    - apt-get install -y libpcap0.8
     - python -m venv venv
     - source venv/bin/activate
     - pip install invoke pip-tools
