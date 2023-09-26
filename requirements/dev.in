@@ -4,3 +4,8 @@ invoke
 pip-tools
 mypy
 pylint
+
+
+# for network analyse (chat_api/test.py)
+psutil
+scapy

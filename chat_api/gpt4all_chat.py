@@ -3,8 +3,10 @@ GPT4ALL chat API.
 """
 import os
 import concurrent.futures
+import requests
 import gpt4all # type: ignore
 from gpt4all import GPT4All as GPT4AllBaseClass # type: ignore
+
 
 # gab ein gpt4all update da nach schauen, dass das dann wieder läuft?
 
@@ -99,14 +101,21 @@ class Chat:
         self.model.load_session(chat)
 
 
-def download_model(model: str):
+def download_model(model: str, max_retrys=5):
     # print(get_save_path()+"/"+model)
     if os.path.exists(get_save_path()+"/"+model):
         return "model all ready exist"
 
     model_name = gpt4all.gpt4all.append_bin_suffix_if_missing(model)
-    GPT4AllBaseClass.download_model(
+    try:
+        GPT4AllBaseClass.download_model(
                 model_name, get_save_path())
+    except requests.exceptions.ChunkedEncodingError:
+        if 0 < max_retrys:
+            download_model(model, max_retrys-1)
+        else:
+            return f"the model {model} was requested but unable to download"
+
     return model + " is downloaded to " + get_save_path()
 
 def get_list_of_all_models() -> dict:
