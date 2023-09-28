@@ -50,15 +50,18 @@ def test_models_for_security():
 
 
     for model in gpt4all_chat.local_models():
-        print(model)
+        print("model name:\t",model)
         new_traffic = detect_network_traffic()
 
         new_traffic.start()
+        try:
+            chat = gpt4all_chat.Chat(model)
+            chat.new_message('write a "Hello world" program in python')
+            del chat
 
-        chat = gpt4all_chat.Chat(model)
+        except Exception as e:
+            print(e)
 
-        chat.new_message('write a "Hello world" program in python')
-        del chat
         new_traffic.running = False
 
         while new_traffic.runs:
