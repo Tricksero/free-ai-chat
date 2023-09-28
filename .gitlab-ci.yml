@@ -33,8 +33,9 @@ unit-test-job:   # This job runs in the test stage.
     - source venv/bin/activate
     - pip install invoke pip-tools
     - inv sync
-    - python chat_api/test.py
+    - python chat_api/test_api.py
     - echo "Code coverage is x%"
+    - python chat_api/test_networktraffic.py
 
 lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
