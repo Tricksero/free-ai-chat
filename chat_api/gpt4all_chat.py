@@ -123,12 +123,8 @@ def get_list_of_all_models() -> dict:
 
 def download_all_models():
     model_names = [model["filename"] for model in get_list_of_all_models()]
-    results = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=len(model_names)) as executor:
-        #use multithreading to execute downloads at the same time.
-        response = [executor.submit(download_model, model_name) for model_name in model_names]
-        for i in concurrent.futures.as_completed(response):
-            results.append(i.result())
+    response = [download_model(model_name) for model_name in model_names]
+    return response
 
 
 def get_save_path():
