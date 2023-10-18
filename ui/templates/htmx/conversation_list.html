@@ -2,13 +2,13 @@
 {% load static %}
 
 
-{% for date in conversations %}
+{% for date in conversation_list %}
 <div>
     <h4>date-placeholder</h4>
     <ul>
         
 {% for conversation in date %}
-<li>conversation-placeholder</li>
+<li>{{ conversation.title }}</li>
 {% endfor %}
     </ul>
 </div>

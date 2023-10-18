@@ -37,7 +37,7 @@ eval("(() => {\n  var We = !1,\n    Ge = !1,\n    B = [];\n  function $t(e) {\n 
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _js_alpine_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../js/alpine.js */ \"./assets/js/alpine.js\");\n/* harmony import */ var _js_alpine_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_js_alpine_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _img_content_hhu_logo_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../img/content/hhu_logo.svg */ \"./assets/img/content/hhu_logo.svg\");\n/* harmony import */ var _css_main_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../css/main.css */ \"./assets/css/main.css\");\n//import \"../js/htmx.min.js\";\n\n\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvd2VicGFja19lbnRyeV9wb2ludHMvYmFzZV9lbnRyeS5qcyIsIm1hcHBpbmdzIjoiOzs7OztBQUFBO0FBQ3lCO0FBQ1kiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9jaGF0Z3B0NGFsbC8uL2Fzc2V0cy93ZWJwYWNrX2VudHJ5X3BvaW50cy9iYXNlX2VudHJ5LmpzP2RlOGQiXSwic291cmNlc0NvbnRlbnQiOlsiLy9pbXBvcnQgXCIuLi9qcy9odG14Lm1pbi5qc1wiO1xuaW1wb3J0IFwiLi4vanMvYWxwaW5lLmpzXCI7XG5pbXBvcnQgXCIuLi9pbWcvY29udGVudC9oaHVfbG9nby5zdmdcIjtcblxuaW1wb3J0IFwiLi4vY3NzL21haW4uY3NzXCI7XG4iXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./assets/webpack_entry_points/base_entry.js\n");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _js_alpine_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../js/alpine.js */ \"./assets/js/alpine.js\");\n/* harmony import */ var _js_alpine_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_js_alpine_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _img_content_hhu_logo_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../img/content/hhu_logo.svg */ \"./assets/img/content/hhu_logo.svg\");\n/* harmony import */ var _ts_test_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../ts/test.ts */ \"./assets/ts/test.ts\");\n/* harmony import */ var _css_main_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../css/main.css */ \"./assets/css/main.css\");\n//import \"../js/htmx.min.js\";\n\n\n\n\n(0,_ts_test_ts__WEBPACK_IMPORTED_MODULE_2__.testTypescript)();//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvd2VicGFja19lbnRyeV9wb2ludHMvYmFzZV9lbnRyeS5qcyIsIm1hcHBpbmdzIjoiOzs7Ozs7QUFBQTtBQUN5QjtBQUNZO0FBQ1U7QUFDdEI7QUFFekJBLDJEQUFjLENBQUMsQ0FBQyIsInNvdXJjZXMiOlsid2VicGFjazovL2NoYXRncHQ0YWxsLy4vYXNzZXRzL3dlYnBhY2tfZW50cnlfcG9pbnRzL2Jhc2VfZW50cnkuanM/ZGU4ZCJdLCJzb3VyY2VzQ29udGVudCI6WyIvL2ltcG9ydCBcIi4uL2pzL2h0bXgubWluLmpzXCI7XG5pbXBvcnQgXCIuLi9qcy9hbHBpbmUuanNcIjtcbmltcG9ydCBcIi4uL2ltZy9jb250ZW50L2hodV9sb2dvLnN2Z1wiO1xuaW1wb3J0IHsgdGVzdFR5cGVzY3JpcHQgfSBmcm9tIFwiLi4vdHMvdGVzdC50c1wiO1xuaW1wb3J0IFwiLi4vY3NzL21haW4uY3NzXCI7XG5cbnRlc3RUeXBlc2NyaXB0KCk7Il0sIm5hbWVzIjpbInRlc3RUeXBlc2NyaXB0Il0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./assets/webpack_entry_points/base_entry.js\n");
 
 /***/ }),
 
@@ -104,6 +104,17 @@ eval("Object.defineProperty(exports, \"__esModule\", ({value:true}));exports.fro
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvY3NzL21haW4uY3NzIiwibWFwcGluZ3MiOiI7QUFBQSIsInNvdXJjZXMiOlsid2VicGFjazovL2NoYXRncHQ0YWxsLy4vYXNzZXRzL2Nzcy9tYWluLmNzcz8wNzdhIl0sInNvdXJjZXNDb250ZW50IjpbIi8vIGV4dHJhY3RlZCBieSBtaW5pLWNzcy1leHRyYWN0LXBsdWdpblxuZXhwb3J0IHt9OyJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./assets/css/main.css\n");
+
+/***/ }),
+
+/***/ "./assets/ts/test.ts":
+/*!***************************!*\
+  !*** ./assets/ts/test.ts ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   testTypescript: () => (/* binding */ testTypescript)\n/* harmony export */ });\nfunction testTypescript() {\n    console.log(\"hello from typescript\");\n    return;\n}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9hc3NldHMvdHMvdGVzdC50cyIsIm1hcHBpbmdzIjoiOzs7O0FBQU87QUFDUDtBQUNBO0FBQ0EiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9jaGF0Z3B0NGFsbC8uL2Fzc2V0cy90cy90ZXN0LnRzPzRhZGYiXSwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGZ1bmN0aW9uIHRlc3RUeXBlc2NyaXB0KCkge1xuICAgIGNvbnNvbGUubG9nKFwiaGVsbG8gZnJvbSB0eXBlc2NyaXB0XCIpO1xuICAgIHJldHVybjtcbn1cbiJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./assets/ts/test.ts\n");
 
 /***/ }),
 
@@ -366,7 +377,7 @@ module.exports = __webpack_require__.p + "img/design/hhu_logo.639954.svg";
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("33885481ae064eaa5b74")
+/******/ 		__webpack_require__.h = () => ("e8542716223dd98745be")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

@@ -8,6 +8,6 @@ urlpatterns = [
 
     # htmx
     path('chat-conversation-log/', views.chat_conversation_log, name="chat-conversation-log"),
-    path('question/', views.question, name="chat-question"),
+    path('question/', views.get_question, name="chat-question"),
     path('conversation-list/', views.conversation_list, name="chat-conversation-list"),
 ]

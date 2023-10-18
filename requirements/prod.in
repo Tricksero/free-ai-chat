@@ -16,3 +16,4 @@ urllib3
 django<5
 django-widget-tweaks
 psycopg2
+zmq

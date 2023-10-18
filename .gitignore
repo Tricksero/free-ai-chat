@@ -169,4 +169,3 @@ requirements/**.txt
 **node_modules**
 **/venv_test
 **/venv_network
-**node_modules**
