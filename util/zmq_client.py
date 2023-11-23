@@ -20,9 +20,9 @@ def send_question(id: str, question: str=""):
     print("Connect...")
     socket = context.socket(zmq.REQ)
     socket.connect("tcp://localhost:5555")
+    socket.setsockopt(zmq.CONNECT_TIMEOUT, 5000)
     print("Connected")
 
-    question = question
     question_dict = {
         "question_text": question,
         "question_id": id

@@ -7,6 +7,13 @@
     <body
 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
     >
+
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'tailwind/tailwind.css' %}">
+<script>
+        window.new_question_url = "{% url 'user_interface:question-new-edit' %}"
+</script>
+<script src="{% static 'js/base.js' %}"></script>
     <div id="base-header-main-wrapper" class="h-screen flex flex-col">
         <header class="">
             {% include "components/navbar.html" %}

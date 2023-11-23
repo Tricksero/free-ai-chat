@@ -10,4 +10,5 @@ urlpatterns = [
     path('chat-conversation-log/', views.chat_conversation_log, name="chat-conversation-log"),
     path('question/', views.get_question, name="chat-question"),
     path('conversation-list/', views.conversation_list, name="chat-conversation-list"),
+    path('new_edit_question/', views.new_or_edit_question, name="question-new-edit"),
 ]

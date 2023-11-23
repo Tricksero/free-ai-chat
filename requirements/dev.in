@@ -8,3 +8,4 @@ pip-tools
 mypy
 pylint
 safety
+djlint

@@ -1,6 +1,7 @@
 import time
 import json
-from django.shortcuts import render
+import uuid
+from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
 from ui.models import Question, Conversation
 from util.zmq_client import send_question
@@ -10,26 +11,25 @@ DEFAULT_CHAT_MODEL_NAME = "llama-2-7b-chat.ggmlv3.q4_0.bin"
 DEFAULT_TIMEOUT = 100000  
 
 # utility
-def pull_answer(request):
+def pull_answer(request, question_id):
     """
     Partial view for displaying a question, expecting a post with a conversation id and a question id
 
     for quick slowly building responses, messages should be generated word by word and returned
     """
     if request.method == "POST":
-        question_id = request.POST.get("question")
-        question_obj = Question.get(id=question_id)
-
+        question_obj = Question.objects.get(id=question_id)
+        question_json = json.loads(question_obj.json)
         try:
-            new_msg_part, finished = send_question(id=question_id)
+            new_msg_part, finished = send_question(id=str(question_id), question=question_json["question"])
+            print("new_msg", new_msg_part)
         except Exception as e:
             print("new question could not be generated ", e)
             question_obj.state = "failed"
-            return question_obj
+            return HttpResponse("failed")
             
         if finished:
             question_json.state = "finished"
-        question_json = json.loads(question_obj.json)
         old_msg_parts = question_json["answer"]
         question_json["answer"] = old_msg_parts + "".join(new_msg_part)
 
@@ -66,7 +66,7 @@ def chat_view(request):
 @login_required
 def chat_conversation_log(request):
     """
-    partial view for conversation log
+    partial view for conversation log of past answers and questions
     """
     if request.method == "POST":
         conversation_id = request.POST.get("conversation")
@@ -78,10 +78,22 @@ def chat_conversation_log(request):
         else: 
             conversation = Conversation.objects.all().order_by('-date').first()
         question_objs = Question.objects.filter(conversation=conversation)
+        #print("CONVERSATION:", conversation.id)
+        request.session["conversation"] = str(conversation.id)
         for question_obj in question_objs:
-            conversation = {
-                "question_id": question_obj.id,
-            }
+            try:
+                question_json = json.loads(question_obj.json)
+                print("json", question_json)
+                answer = question_json.get("answer"),
+                question = question_json.get("question"),
+                conversation = {
+                    "question_id": question_obj.id,
+                    "answer": answer,
+                    "question": question,
+                }
+            except Exception as e:
+                print("could not decode", e)
+                continue
             context["conversation_log"].append(conversation)
         return render(request, "htmx/chat_conversation_log.html", context=context)
 
@@ -93,26 +105,29 @@ def new_or_edit_question(request):
     object or deleting the answer of an old one.
     """
     if request.method == "POST":
-        new_question = request.POST.get("new_question")
-        question_id = request.POST.get("question")
+        print("post", request.POST)
+        #new_question = request.POST.get("new_question")
+        question_text = request.POST.get("question_text")
+        question_id = request.POST.get("question_id")
+        print("question_id", question_id)
         if question_id:
-            question_obj = Question.get(id=question_id)
+            question_obj = Question.objects.get(id=question_id)
             question_json = json.loads(question_obj.json)
         else:
-            conversation_id = request.POST.get("conversation")
-            conversation_obj = Conversation.get(id=conversation_id)
+            conversation_id = request.session.get("conversation")
+            print("conversion", uuid.UUID(conversation_id))
+            conversation_obj = Conversation.objects.get(id=uuid.UUID(conversation_id))
             if not conversation_obj:
                 return
-            question_obj = Question.create(id=question_id,
-                                        conversation=conversation_id
-                                        )
+            question_obj = Question.objects.create(conversation=conversation_obj, json="{}")
             question_json = {}
 
-        question_json["question"] = new_question
+        question_json["question"] = question_text
         question_json["answer"] = ""
         question_obj.json = json.dumps(question_json)
-        question_json.state = "unfinished"
-        return pull_answer(request)
+        question_obj.state = "unfinished"
+        print(question_obj.__dict__)
+        return pull_answer(request, question_obj.id)
 
 
 
@@ -133,13 +148,17 @@ def get_question(request):
     if request.method == "POST":
         question_id = request.POST.get("question")
         conversation_id = request.POST.get("conversation")
-        conversation_obj = Conversation.get(id=conversation_id)
-        question_obj = Question.get(
+        conversation_obj = Conversation.objects.get(id=conversation_id)
+        question_obj = Question.objects.get(
             conversation=conversation_obj.id,
             id=question_id,
             )
+        json_dict = json.loads(question_obj.json)
+        question = json_dict["question"]
+        answer = json_dict["answer"]
         context = {
-            "question": question_obj
+            "answer": answer,
+            "question": question,
         }
         return render(request, "htmx/question.html", context=context)
 

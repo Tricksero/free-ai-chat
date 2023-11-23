@@ -31,7 +31,7 @@
         load ...
         </div>
         <div id="question-input-wrapper" class="flex flex-row align-bottom w-10/12">
-            <form>
+            <form id="question-form" method="POST" onSubmit="onSubmitQuestion(event)">
                 {% csrf_token %}
                 {{ form }}
                 <button type="submit">{% trans "send-question-button" %}</button>
