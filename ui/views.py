@@ -20,20 +20,20 @@ def pull_answer(request, question_id):
     if request.method == "POST":
         question_obj = Question.objects.get(id=question_id)
         question_json = json.loads(question_obj.json)
-        try:
-            new_msg_part, finished = send_question(id=str(question_id), question=question_json["question"])
-            print("new_msg", new_msg_part)
-        except Exception as e:
-            print("new question could not be generated ", e)
-            question_obj.state = "failed"
-            return HttpResponse("failed")
+        #try:
+        new_msg_part, finished = send_question(id=str(question_id), question=question_obj.question)
+        print("new_msg", new_msg_part)
+        #except Exception as e:
+            #print("new question could not be generated ", e)
+            #question_obj.state = "failed"
+            #return HttpResponse("failed")
             
         if finished:
-            question_json.state = "finished"
-        old_msg_parts = question_json["answer"]
-        question_json["answer"] = old_msg_parts + "".join(new_msg_part)
+            question_obj.state = "finished"
+        old_msg_parts = question_obj.answer
+        question_obj.answer = old_msg_parts + "".join(new_msg_part)
 
-        question_obj.json = json.dumps(question_json)
+        #question_obj.json = json.dumps(question_json)
         question_obj.save()
 
         return question_obj
@@ -77,24 +77,20 @@ def chat_conversation_log(request):
             conversation = Conversation.objects.get(id=conversation_id)
         else: 
             conversation = Conversation.objects.all().order_by('-date').first()
-        question_objs = Question.objects.filter(conversation=conversation)
-        #print("CONVERSATION:", conversation.id)
+            if not conversation:
+                return render(request, "htmx/chat_conversation_log.html", context=context)
         request.session["conversation"] = str(conversation.id)
+        question_objs = Question.objects.filter(conversation=conversation)
+        print("questions", question_objs)
+        #print("CONVERSATION:", conversation.id)
         for question_obj in question_objs:
-            try:
-                question_json = json.loads(question_obj.json)
-                print("json", question_json)
-                answer = question_json.get("answer"),
-                question = question_json.get("question"),
-                conversation = {
-                    "question_id": question_obj.id,
-                    "answer": answer,
-                    "question": question,
-                }
-            except Exception as e:
-                print("could not decode", e)
-                continue
-            context["conversation_log"].append(conversation)
+            conversation_pair = {
+                "question_id": question_obj.id,
+                "answer": question_obj.answer,
+                "question": question_obj.question,
+            }
+            context["conversation_log"].append(conversation_pair)
+        print("context", context)
         return render(request, "htmx/chat_conversation_log.html", context=context)
 
 @login_required
@@ -122,14 +118,13 @@ def new_or_edit_question(request):
             question_obj = Question.objects.create(conversation=conversation_obj, json="{}")
             question_json = {}
 
-        question_json["question"] = question_text
-        question_json["answer"] = ""
+        question_obj.question = question_text
+        question_obj.answer = ""
         question_obj.json = json.dumps(question_json)
         question_obj.state = "unfinished"
+        question_obj.save()
         print(question_obj.__dict__)
         return pull_answer(request, question_obj.id)
-
-
 
 @login_required
 def regular_pull(request):
@@ -146,19 +141,17 @@ def get_question(request):
     Partial view rendering a single question with response.
     """
     if request.method == "POST":
+        print("POST", request.POST)
         question_id = request.POST.get("question")
-        conversation_id = request.POST.get("conversation")
-        conversation_obj = Conversation.objects.get(id=conversation_id)
+        conversation_id = request.session.get("conversation")
+        conversation_obj = Conversation.objects.get(id=uuid.UUID(conversation_id))
         question_obj = Question.objects.get(
             conversation=conversation_obj.id,
-            id=question_id,
+            id=uuid.UUID(question_id),
             )
-        json_dict = json.loads(question_obj.json)
-        question = json_dict["question"]
-        answer = json_dict["answer"]
         context = {
-            "answer": answer,
-            "question": question,
+            "answer": question_obj.answer,
+            "question": question_obj.question,
         }
         return render(request, "htmx/question.html", context=context)
 

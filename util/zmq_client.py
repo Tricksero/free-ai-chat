@@ -22,6 +22,7 @@ def send_question(id: str, question: str=""):
     socket.connect("tcp://localhost:5555")
     socket.setsockopt(zmq.CONNECT_TIMEOUT, 5000)
     print("Connected")
+    #socket.RCVTIMEO = 3000
 
     question_dict = {
         "question_text": question,
@@ -35,10 +36,10 @@ def send_question(id: str, question: str=""):
     message = socket.recv()
     message = message.decode("utf-8")
     message_dict = json.loads(message)
-    text = message_dict["question_text"]
+    text = message_dict["response"]
     finished = message_dict["finished"]
     resulting_text = "".join(text)
-    print("Received reply %s [ %s ]" % (question_dict, resulting_text, finished))
+    print(f"Received reply {question_dict} [ {resulting_text} ] {finished}")
     return resulting_text, finished
 
 class TCPClientTestCase(TestCase):

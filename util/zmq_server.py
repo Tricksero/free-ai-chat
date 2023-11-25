@@ -36,13 +36,14 @@ def question_response(gen):
     finished = True
     start_time = time.time()
     for word in gen:
+        response_msg.append(word)
         if MAX_CHARACTER_COUNT == len(response_msg):
             finished = False
             break
         if MAX_GENERATION_TIME < start_time - time.time():
             finished = False
             break
-        response_msg.append(word)
+    print("generated", response_msg)
     return response_msg, gen, finished
 
 cached_generator = []
