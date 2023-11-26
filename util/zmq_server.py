@@ -33,48 +33,72 @@ def question_response(gen):
     MAX_GENERATION_TIME = 2
     MAX_CHARACTER_COUNT = 50
     response_msg = []
-    finished = True
+    state = "finished"
     start_time = time.time()
     for word in gen:
         response_msg.append(word)
         if MAX_CHARACTER_COUNT == len(response_msg):
-            finished = False
+            state = "unfinished"
             break
         if MAX_GENERATION_TIME < start_time - time.time():
-            finished = False
+            state = "unfinished"
             break
     print("generated", response_msg)
-    return response_msg, gen, finished
+    return response_msg, gen, state
 
-cached_generator = []
+def build_json_reponse(session, response, state):
+    chat_response = {
+        "question_id": session,
+        "response": response,
+        "state": state,
+    }
+    print("response_json: ", chat_response)
+    response_json = json.dumps(chat_response)
+    response_json = response_json.encode("utf-8")
+    return response_json
+
+cached_generator = {}
 print("start loop: ")
 while True:
     message = socket.recv()
     message = message.decode("utf-8")
     if message:
         print("message: ", message)
+        # unpacking message of client
         try:
             message_dict = json.loads(message)
         except Exception as e:
             print("not usable json: ", e)
-        session = message_dict["question_id"]
-        question = message_dict["question_text"]
-        gen = chat_obj.new_message_stream(question)
-        response, gen, finished = question_response(gen=gen)
-        cached_generator.append({
-            "gen": gen,
-            "question_id": session
-        })
+        session = message_dict.get("question_id")
+        question = message_dict.get("question_text")
+        client_question_state = message_dict.get("state")
+
+        # get or create generator and generate answer
+        gen = cached_generator.get(session)
+        if not gen:
+            # makes sure a question that has already a generated part does not get generated anew again when the generator was not saved
+            if client_question_state == "unfinished":
+                state = "failed"
+                response_json = build_json_reponse(session, "", state)
+                socket.send(response_json)
+                continue
+            gen = chat_obj.new_message_stream(question)
+        response, gen, state = question_response(gen=gen)
+
+        # caching 
+        # TODO: prevent memory leaks due to too many cached gens, also maybe find a way to do
+        # proper chaching
+        if state == "finished":
+            print(f"delete {session} from cached generators")
+            gen = cached_generator.get(session)
+            if gen:
+                cached_generator[session]
+        else: 
+            print(f"cache generator of {session}")
+            cached_generator[session] = gen
 
         # build the response
-        chat_response = {
-            "question_id": session,
-            "response": response,
-            "finished": finished,
-        }
-        print("response_json: ", chat_response)
-        response_json = json.dumps(chat_response)
-        response_json = response_json.encode("utf-8")
+        response_json = build_json_reponse(session, response, state)
         socket.send(response_json)
         print("Received request: %s" % message)
     # timeout

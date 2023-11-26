@@ -22,13 +22,61 @@ document.addEventListener("DOMContentLoaded", function () {
     })
 })
 
+async function createQuestionObject(response_dict) {
+    var questionId = response_dict["id"]
+    var finished = response_dict["state"]
+    var question = response_dict["question"]
+    var answer = response_dict["answer"]
+    var pairDiv = $(`#question-${questionId}`)
 
-function onSubmitQuestion(event) {
+    if (pairDiv.length == 0) {
+        let sampleDiv = $("#question-template")
+        pairDiv = sampleDiv.clone()
+        pairDiv.attr("id", `question-${questionId}`)
+        pairDiv.removeClass("hidden")
+        // add new answer text TODO: make this go word for word like chatgpt for chat simulation
+        pairDiv.find(".question-text").append(question)
+
+        $("#conversation-log").append(pairDiv)
+    }
+    // add new answer text TODO: make this go word for word like chatgpt for chat simulation
+    pairDiv.find(".answer-text").append(answer)
+    if (finished == "unfinished") {
+        var response = await $.ajax({
+            url: window.regular_pull,
+            method: 'POST',
+            dataType: 'json',
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRFToken": getCookie("csrftoken"),  // don't forget to include the 'getCookie' function
+            },
+            data: { question_id: questionId },
+            success: function (response) {
+                // Handling the successful response
+                console.log('Data received:', response);
+            },
+            error: function (xhr, status, error) {
+                // Handling errors
+                console.error('Request failed:', status, error);
+            }
+        });
+        let new_response_dict = response
+        pairDiv = createQuestionObject(new_response_dict)
+    }
+    if (finished == "failed") {
+        console.log("question generation failed", questionId)
+        return pairDiv
+    }
+    return pairDiv
+}
+
+
+async function onSubmitQuestion(event) {
     event.preventDefault();
     var value = $("#id_question").get(0).value
     console.log("value", value)
     // Making a GET request using $.ajax()
-    $.ajax({
+    var response = await $.ajax({
         url: window.new_question_url,
         method: 'POST',
         dataType: 'json',
@@ -46,6 +94,7 @@ function onSubmitQuestion(event) {
             console.error('Request failed:', status, error);
         }
     });
+    createQuestionObject(response)
 }
 
 window.onSubmitQuestion = onSubmitQuestion

@@ -1,7 +1,8 @@
 import time
 import json
 import uuid
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from ui.models import Question, Conversation
 from util.zmq_client import send_question
@@ -11,6 +12,16 @@ DEFAULT_CHAT_MODEL_NAME = "llama-2-7b-chat.ggmlv3.q4_0.bin"
 DEFAULT_TIMEOUT = 100000  
 
 # utility
+def question_json_response(question_obj, new_text):
+    question_obj
+    context = {
+        "id": str(question_obj.id),
+        "question": question_obj.question,
+        "answer": new_text,
+        "state": question_obj.state,
+    }
+    return JsonResponse(context)
+
 def pull_answer(request, question_id):
     """
     Partial view for displaying a question, expecting a post with a conversation id and a question id
@@ -21,22 +32,21 @@ def pull_answer(request, question_id):
         question_obj = Question.objects.get(id=question_id)
         question_json = json.loads(question_obj.json)
         #try:
-        new_msg_part, finished = send_question(id=str(question_id), question=question_obj.question)
+        new_msg_part, state = send_question(question=question_obj)
         print("new_msg", new_msg_part)
         #except Exception as e:
             #print("new question could not be generated ", e)
             #question_obj.state = "failed"
             #return HttpResponse("failed")
             
-        if finished:
-            question_obj.state = "finished"
+        question_obj.state = state
         old_msg_parts = question_obj.answer
         question_obj.answer = old_msg_parts + "".join(new_msg_part)
 
         #question_obj.json = json.dumps(question_json)
         question_obj.save()
 
-        return question_obj
+        return question_obj, "".join(new_msg_part)
 
 # main views
 @login_required
@@ -85,12 +95,13 @@ def chat_conversation_log(request):
         #print("CONVERSATION:", conversation.id)
         for question_obj in question_objs:
             conversation_pair = {
-                "question_id": question_obj.id,
+                "question_id": str(question_obj.id),
                 "answer": question_obj.answer,
                 "question": question_obj.question,
+                "state": question_obj.state,
             }
             context["conversation_log"].append(conversation_pair)
-        print("context", context)
+        #print("context", context)
         return render(request, "htmx/chat_conversation_log.html", context=context)
 
 @login_required
@@ -121,18 +132,16 @@ def new_or_edit_question(request):
         question_obj.question = question_text
         question_obj.answer = ""
         question_obj.json = json.dumps(question_json)
-        question_obj.state = "unfinished"
         question_obj.save()
         print(question_obj.__dict__)
-        return pull_answer(request, question_obj.id)
+        question_obj, new_text = pull_answer(request, question_obj.id)
+        return question_json_response(question_obj, new_text)
 
 @login_required
 def regular_pull(request):
-    question_obj = pull_answer(request)
-    context = {
-        "question": question_obj,
-    }
-    return render(request, "htmx/question.html", context=context)
+    question_id = request.POST.get("question_id")
+    question_obj, new_text = pull_answer(request, question_id)
+    return question_json_response(question_obj, new_text)
     
         
 @login_required

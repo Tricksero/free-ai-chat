@@ -11,4 +11,6 @@ urlpatterns = [
     path('question/', views.get_question, name="chat-question"),
     path('conversation-list/', views.conversation_list, name="chat-conversation-list"),
     path('new_edit_question/', views.new_or_edit_question, name="question-new-edit"),
+    # ajax
+    path('regular_pull/', views.regular_pull, name="regular-pull"),
 ]
