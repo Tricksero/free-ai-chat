@@ -4,7 +4,7 @@ cffi
 charset-normalizer
 colorama
 cryptography
-gpt4all<1.0.9
+gpt4all>=2.0.2
 greenlet
 idna
 pycparser

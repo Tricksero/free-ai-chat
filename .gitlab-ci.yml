@@ -16,7 +16,7 @@
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
-image: python:3.11.4-bullseye
+image: python:3.9-bookworm
 
 
 stages:          # List of stages for jobs, and their order of execution
@@ -28,8 +28,8 @@ unit-test-job:   # This job runs in the test stage.
   script:
     - echo "Running unit tests..."
     - apt-get update && apt upgrade -y
-    - apt-get install -y libpcap0.8
-    - python -m venv venv
+    - apt install -y python3.11-venv
+    - python3.11 -m venv venv
     - source venv/bin/activate
     - pip install invoke pip-tools
     - inv sync
@@ -42,7 +42,8 @@ lint-test-job:   # This job also runs in the test stage.
   script:
     - echo "Linting code..."
     - apt-get update && apt upgrade -y
-    - python -m venv venv
+    - apt install -y python3.11-venv
+    - python3.11 -m venv venv
     - source venv/bin/activate
     - pip install invoke pip-tools
     - inv sync

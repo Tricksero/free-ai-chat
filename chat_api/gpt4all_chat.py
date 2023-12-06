@@ -2,7 +2,6 @@
 GPT4ALL chat API.
 """
 import os
-import concurrent.futures
 import requests
 import gpt4all # type: ignore
 from gpt4all import GPT4All as GPT4AllBaseClass # type: ignore
@@ -106,7 +105,7 @@ def download_model(model: str, max_retrys=5):
     if os.path.exists(get_save_path()+"/"+model):
         return "model all ready exist"
 
-    model_name = gpt4all.gpt4all.append_bin_suffix_if_missing(model)
+    model_name = gpt4all.gpt4all.append_extension_if_missing(model)
     try:
         GPT4AllBaseClass.download_model(
                 model_name, get_save_path())
