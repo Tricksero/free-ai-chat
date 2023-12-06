@@ -10,6 +10,7 @@ WORKDIR /gpt4all
 
 COPY ./setup.sh /setup.sh
 
+
 EXPOSE 8000
 
 #RUN python -m venv venv && \
@@ -17,7 +18,6 @@ EXPOSE 8000
 #pip install -r requirements.txt && \
 #python gpt4all_test.py
 RUN python3.11 -m venv venv
-RUN ./venv/bin/activate && pip install invoke pip-tools && inv sync
 RUN chmod +x /setup.sh
 
 

@@ -13,16 +13,21 @@ services:
     ports:
       - "3307:3306"
 
+  ollama:
+    build:
+      context: ./ollama
+    ports:
+      - "9000:9000"
+
   web:
     build:
-      context: .
+      context: ./chat_api
     environment:
       - USING_DOCKER=True
     ports:
       - "8000:8000"
     volumes:
       - ./:/gpt4all/
-    links:
-      - db
 volumes:
   mysql_data:
+
