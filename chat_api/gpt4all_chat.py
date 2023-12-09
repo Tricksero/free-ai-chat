@@ -2,10 +2,11 @@
 GPT4ALL chat API.
 """
 import os
-import requests
+import requests # type: ignore
 import gpt4all # type: ignore
 from gpt4all import GPT4All as GPT4AllBaseClass # type: ignore
 
+# ollama: curl http://ollama:9000
 
 # gab ein gpt4all update da nach schauen, dass das dann wieder läuft?
 

@@ -17,7 +17,9 @@ class GptChatApiTest(unittest.TestCase):
         """test the GPT4ALL class
         """
 
-        gpt_object = gpt4all_chat.GPT4ALL("llama-2-7b-chat.ggmlv3.q4_0.bin")
+        modle_name = [model["filename"] for model in gpt4all_chat.get_list_of_all_models()][0]
+
+        gpt_object = gpt4all_chat.GPT4ALL(modle_name)
 
         message = "The tests does not run on the right class."
 
@@ -57,7 +59,9 @@ class GptChatApiTest(unittest.TestCase):
         """test the GPT4ALL class
         """
 
-        chat_object = gpt4all_chat.Chat("llama-2-7b-chat.ggmlv3.q4_0.bin")
+        modle_list = [model["filename"] for model in gpt4all_chat.get_list_of_all_models()]
+
+        chat_object = gpt4all_chat.Chat(modle_list[1])
 
         message = "The tests does not run on the right class."
 
@@ -101,7 +105,7 @@ class GptChatApiTest(unittest.TestCase):
 
         # test change model
 
-        chat_object.change_model("nous-hermes-13b.ggmlv3.q4_0.bin")
+        chat_object.change_model(modle_list[-1])
 
         new_session = chat_object.save_session()
 
@@ -119,16 +123,18 @@ class GptChatApiTest(unittest.TestCase):
         """test all functions in the api.
         """
 
-        check_download_working = gpt4all_chat.download_model("ggml-model-gpt4all-falcon-q4_0.bin")
+        modle_list = [model["filename"] for model in gpt4all_chat.get_list_of_all_models()]
+
+        check_download_working = gpt4all_chat.download_model(modle_list[2])
 
         message = "Given model download was expected."
 
         self.assertEqual(check_download_working,
-                         "ggml-model-gpt4all-falcon-q4_0.bin" + \
+                         modle_list[2] + \
                             " is downloaded to " + \
                                 gpt4all_chat.get_save_path(), message)
 
-        check_download_all_ready = gpt4all_chat.download_model("ggml-model-gpt4all-falcon-q4_0.bin")
+        check_download_all_ready = gpt4all_chat.download_model(modle_list[2])
 
         message = "Given model is as all ready downloaded was expected."
 
