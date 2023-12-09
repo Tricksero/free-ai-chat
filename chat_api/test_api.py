@@ -146,6 +146,8 @@ class GptChatApiTest(unittest.TestCase):
 
         msg = 'the listed models are unequal to the models in the cache.'
 
+        print(gpt4all_chat.local_models(), "\n\n", local_models)
+
         self.assertEqual(gpt4all_chat.local_models(), local_models, msg)
 
         gpt4all_chat.download_all_models()
