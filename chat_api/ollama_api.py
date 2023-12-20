@@ -1,6 +1,6 @@
 import requests
 import json
-import os
+
 # model list https://ollama.ai/library
 
 
@@ -20,61 +20,13 @@ def download_model(modelname):
     # return modelname.split(":")[0] in local_model_list
 
 
-def list_local_models():
+def local_models():
     url = "http://ollama:9000/api/"
 
     response = requests.get(url + "tags")
     response = json.loads(response.text)
 
     return response
-
-def new_message(model, msg,img: list = []):
-    url = "http://ollama:9000/api/"
-    data= {
-  "model": model,
-  "messages": [
-    # {
-    #   "role": "user",
-    #   "content": "why is the sky blue?"
-    # },
-    # {
-    #   "role": "assistant",
-    #   "content": "due to rayleigh scattering."
-    # },
-    {
-        "role": "user",
-        "content": msg,
-    }
-  ],
-  "images": img, # in einer Liste als base64 encoded
-}
-
-#     import base64
-
-# # Function to encode an image file to base64
-# def encode_image_to_base64(image_path):
-#     with open(image_path, "rb") as image_file:
-#         encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
-#     return encoded_string
-
-# # Path to your image file
-# image_path = "path/to/your/image.jpg"
-
-# # Encode the image to base64
-# image_base64 = encode_image_to_base64(image_path)
-
-    response = requests.post(url + "chat", json=data, stream= True)
-    a = ""
-    for line in response.iter_lines():
-        if "error" in json.loads(line.decode()):
-            print(json.loads(line.decode()))
-            break
-        os.system("clear")
-        a += json.loads(line.decode())["message"]["content"]
-        print(a)
-        # print(json.loads(line.decode())["message"]["content"],type(json.loads(line.decode())))
-        print("")
-
 
 
 def create_init_promt(name, base_model, init_promt):
@@ -91,29 +43,65 @@ def create_init_promt(name, base_model, init_promt):
         print("")
 
 
-class api_chat:
-    def __init__(self, modelname) -> None:
-        # strucktur übernehmen. Über legen wie ich das am ende zusammen gefügt bekomme.
-        # speed vergleich.
-        pass
 
-# Frage wie funktioniert das mit interschiedlichen chats die paralell laufen?
+class Chat:
+    def __init__(self, model_name: str = "llama2") -> None:
+        self.model_name = model_name
+        self.chat_session = []
 
-# Antwort:
-# curl http://localhost:11434/api/chat -d '{
-#   "model": "llama2",
-#   "messages": [
-#     {
-#       "role": "user",
-#       "content": "why is the sky blue?"
-#     },
-#     {
-#       "role": "assistant",
-#       "content": "due to rayleigh scattering."
-#     },
-#     {
-#       "role": "user",
-#       "content": "how is that different than mie scattering?"
-#     }
-#   ]
-# }'
+    def new_message(self, msg,img: list = []):
+        url = "http://ollama:9000/api/"
+        self.chat_session.append(
+
+                {
+                    "role": "user",
+                    "content": msg,
+                }
+            )
+        data= {
+            "model": self.model_name,
+            "messages": self.chat_session,
+    "images": img, # in einer Liste als base64 encoded
+    }
+
+        response = requests.post(url + "chat", json=data)
+        return response.text
+
+    def new_message_stream(self, msg,img: list = []):
+        self.chat_session.append(
+
+                {
+                    "role": "user",
+                    "content": msg,
+                }
+            )
+        url = "http://ollama:9000/api/"
+        data= {
+            "model": self.model_name,
+            "messages": self.chat_session,
+    "images": img, # in einer Liste als base64 encoded
+    }
+        response = requests.post(url + "chat", json=data, stream= True)
+        for line in response.iter_lines():
+            if "error" in json.loads(line.decode()):
+                yield json.loads(line.decode())
+                break
+
+            yield json.loads(line.decode())["message"]["content"]
+
+
+    def change_msg(self, new_msg: str, index: int):
+        old_chat = self.chat_session
+        self.chat_session = old_chat[:index]
+        return self.new_message_stream(new_msg)
+
+    def save_session(self) -> list:
+        # das müsste alles sein
+        return self.chat_session
+
+    def load_session(self, chat_session: list):
+        self.chat_session = chat_session
+
+
+    def change_model(self, new_model_name):
+        self.model_name = new_model_name

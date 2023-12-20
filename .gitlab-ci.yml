@@ -23,7 +23,7 @@ stages:          # List of stages for jobs, and their order of execution
   - test
 
 
-unit-test-job:   # This job runs in the test stage.
+unit-test-gpt4all-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - echo "Running unit tests..."
@@ -33,7 +33,7 @@ unit-test-job:   # This job runs in the test stage.
     - source venv/bin/activate
     - pip install invoke pip-tools
     - inv sync
-    - python chat_api/test_api.py
+    - python chat_api/test_gpt4all_api.py
     - echo "Code coverage is x%"
     - python chat_api/test_networktraffic.py
 
