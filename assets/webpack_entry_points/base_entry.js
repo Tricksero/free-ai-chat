@@ -4,6 +4,7 @@ import "../img/content/hhu_logo.svg";
 import getCookie from "../js/getCookie.js";
 import { testTypescript } from "../ts/test.ts";
 import "../css/main.css";
+import { get } from "jquery";
 
 document.body.addEventListener("htmx:afterRequest", (event) => {
     var exit = false
@@ -14,6 +15,15 @@ document.body.addEventListener("htmx:afterRequest", (event) => {
     // filters for specific htmx events and their targets to trigger component specific initialization
     if (event.detail.target.id == "mailbox-div-snapshot") {
 
+    }
+    if (event.detail.target.id == "conversation-log") {
+
+    // Get the scrollable element
+    //var scrollableElement = $("#conversation-log")[0];
+    var scrollableElement = document.getElementById("conversation-log")
+
+    // Scroll the element to the bottom
+    scrollableElement.scrollTop = scrollableElement.scrollHeight;
     }
 })
 

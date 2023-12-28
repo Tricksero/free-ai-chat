@@ -1,20 +1,31 @@
 {% load i18n %}
 {% load static %}
-<div id="question-template" class="w-full question-div hidden">
-<p class="question-text">question: </p>
-<p class="answer-text">answer: </p>
-</div>
-{% for question in conversation_log reversed %}
-<p>PAIR</p>
-<div id="question-{{ question.question_id }}" class="w-full question-div">
-{% comment "" %}
+<div id="conversation-log-scroll-list" class="justify-end flex-col flex flex-1">
+{% for question in conversation_log.object_list %}
+    <div id="question-{{ question.question_id }}" class="w-full question-div ">
+        {% comment "" %}
     hx-post="{% url 'user_interface:chat-question' %}"
     hx-vars="question:'{{question.question_id}}'"
     hx-target="#htmx-past-conversations"
     hx-swap="innerHTML"
     hx-trigger="load"
-{% endcomment %}
-<p class="question-text">question: {{ question.question }}</p>
-<p class="answer-text">answer: {{ question.answer }}</p>
-</div>
+        {% endcomment %}
+        <div class="bg-slate-300 border-slate-500 border px-4 py-3 relative">
+            <strong>
+                {% trans "You-conversation-partner" %}
+            </strong>
+            <br>
+            <p class="question-text">question: {{ question.question }}</p>
+        </div>
+        <div class="bg-slate-300 border-slate-500 border px-4 py-3 relative">
+            <p class="answer-text">
+                <strong>
+                {% trans "Chatbot-conversation-partner" %}
+                </strong>
+                <br>
+                answer: {{ question.answer }}
+            </p>
+        </div>
+    </div>
 {% endfor %}
+</div>

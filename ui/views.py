@@ -1,6 +1,6 @@
-import time
 import json
 import uuid
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -30,7 +30,6 @@ def pull_answer(request, question_id):
     """
     if request.method == "POST":
         question_obj = Question.objects.get(id=question_id)
-        question_json = json.loads(question_obj.json)
         #try:
         new_msg_part, state = send_question(question=question_obj)
         print("new_msg", new_msg_part)
@@ -60,6 +59,7 @@ def chat_view(request):
         "model": "",
         "chats": [],
         "form": QuestionForm,
+        "hide_navbar": True,
     }
     print("chat_object", request.session.get("model"))
 
@@ -80,19 +80,29 @@ def chat_conversation_log(request):
     """
     if request.method == "POST":
         conversation_id = request.POST.get("conversation")
+        if not conversation_id:
+            conversation_id = request.session.get("conversation", None)
+        page_num = request.POST.get("page")
         context = {
             "conversation_log": [],
         }
+        # gets conversation object defaults to the newest
         if conversation_id:
+            #print("CONVERSATION:", conversation.id)
             conversation = Conversation.objects.get(id=conversation_id)
         else: 
             conversation = Conversation.objects.all().order_by('-date').first()
+            # if there are no conversations just show an emty list
             if not conversation:
                 return render(request, "htmx/chat_conversation_log.html", context=context)
+
+        # get all questions for the current conversation starting with the newest
         request.session["conversation"] = str(conversation.id)
-        question_objs = Question.objects.filter(conversation=conversation)
+        question_objs = Question.objects.filter(conversation=conversation).order_by("-date")
         print("questions", question_objs)
-        #print("CONVERSATION:", conversation.id)
+        # serialize the question into an object displayed by the frontend
+        # TODO: Maybe define a proper serializer for this.
+        conversation_pair_list = []
         for question_obj in question_objs:
             conversation_pair = {
                 "question_id": str(question_obj.id),
@@ -100,8 +110,13 @@ def chat_conversation_log(request):
                 "question": question_obj.question,
                 "state": question_obj.state,
             }
-            context["conversation_log"].append(conversation_pair)
-        #print("context", context)
+            conversation_pair_list.append(conversation_pair)
+        # paginate the questions so not all of them are passed to the frontend
+        conversation_paginator = Paginator(conversation_pair_list, 10)
+        conversation_pair_page = conversation_paginator.get_page(page_num)
+        context["conversation_log"] = conversation_pair_page
+        #print(f"CONVERSATION PAGE: {conversation_pair_page}")
+
         return render(request, "htmx/chat_conversation_log.html", context=context)
 
 @login_required
@@ -113,7 +128,6 @@ def new_or_edit_question(request):
     """
     if request.method == "POST":
         print("post", request.POST)
-        #new_question = request.POST.get("new_question")
         question_text = request.POST.get("question_text")
         question_id = request.POST.get("question_id")
         print("question_id", question_id)
@@ -139,6 +153,9 @@ def new_or_edit_question(request):
 
 @login_required
 def regular_pull(request):
+    """
+    Retrieves the next part of an answer util it is finished.
+    """
     question_id = request.POST.get("question_id")
     question_obj, new_text = pull_answer(request, question_id)
     return question_json_response(question_obj, new_text)

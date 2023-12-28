@@ -1,0 +1,31 @@
+{% comment "" %}
+Normal base template won't do as base for the chat template
+TODO: Maybe move over to ui or split the base template up entirely.
+{% endcomment %}
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="de">
+        
+    <head>{% include "head.html" %}</head>
+    <body
+hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+    >
+
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'tailwind/tailwind.css' %}">
+<script>
+        window.new_question_url = "{% url 'user_interface:question-new-edit' %}"
+        window.regular_pull = "{% url 'user_interface:regular-pull' %}"
+</script>
+<script src="{% static 'js/base.js' %}"></script>
+    <div id="base-header-main-wrapper" class="h-screen flex flex-col">
+        <main class="flex flex-grow flex-col">
+            <div class="w-10/12 h-full" id="content">
+                {% block content %}
+                {% endblock content %}
+            </div>
+        </main>
+    </div>
+    </body>
+</html>

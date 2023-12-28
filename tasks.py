@@ -11,24 +11,23 @@ import subprocess
 from invoke import task
 from pathlib import Path
 
-PROJECT_NAME = "www_dashboard"
+PROJECT_NAME = "gpt4all"
 PYTHON_VERSION = "3.9"
 VENV = "venv"
 BUILD_INCLUDE = [
-    'dashboard',
-    'plesk',
+    'gpt4all_webapp',
+    'ui',
     #'src',
     'templates',
     'version',
+    'util',
     #'locale',
-    'static',
 ]
 
 BUILD_ENTRYPOINT = "dashboard.main:main"
 BASE_DIR = Path(__file__).parent
 with open(BASE_DIR / 'version', 'r') as f:
     VERSION = f.read()
-
 
 def get_current_build():
     """
@@ -46,7 +45,7 @@ def test(c):
     """
     Specify tests to run before packaging.
     """
-    pass
+    c.run("safety check")
 
 @task
 def sync(c, skip_compile=False, update=False, dry_run=False):
@@ -54,7 +53,7 @@ def sync(c, skip_compile=False, update=False, dry_run=False):
     Uses the pip-tools functions compile and sync to download the most stable
     dependency configuration for your current system.
     """
-    c.run(f"pip install pip-tools")
+    c.run("pip install pip-tools")
     if skip_compile:
         print('skipping compiling ...')
     else:
@@ -119,7 +118,7 @@ def deploy_to_target(c, target):
     print(f"kopiere build {PROJECT_NAME}-{VERSION}.pyz")
     c.run(f"scp {build_path} {target}:{project_path}/build/")
 
-    print(f"kopiere css/javascript to target")
+    print("kopiere css/javascript to target")
     c.run(f"scp -r \"{str(BASE_DIR)}/static\" {target}:{project_path}")
 
     print("erstelle symlink")
@@ -177,8 +176,6 @@ def example_invoke_task(ctx):
         module_file.write("invoke \n======== \n\n")
         module_file.close()
 
-    task_list = []
-    help_strings = []
     tasks_dict = tasks.__dict__
     print(tasks_dict)
     for key in tasks_dict.keys():

@@ -234,3 +234,7 @@ overflow-x:hidden !important;
 .color-frei {
   color: #38924c;
 }
+
+#conversation-log {
+  overflow-y: scroll;
+}
