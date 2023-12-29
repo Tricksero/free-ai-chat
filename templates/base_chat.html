@@ -21,7 +21,7 @@ hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
 <script src="{% static 'js/base.js' %}"></script>
     <div id="base-header-main-wrapper" class="h-screen flex flex-col">
         <main class="flex flex-grow flex-col">
-            <div class="w-10/12 h-full" id="content">
+            <div class="w-full h-full" id="content">
                 {% block content %}
                 {% endblock content %}
             </div>

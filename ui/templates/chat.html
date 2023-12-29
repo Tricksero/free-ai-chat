@@ -4,7 +4,8 @@
 {% load widget_tweaks %}
 {% block content %}
 <div id="chat-page-wrapper" class="w-full flex flex-row h-full">
-    <div id="conversations-wrapper" class="flex w-4/12 h-full">
+    <div id="conversations-wrapper" class="flex flex-col w-3/12 p-4 bg-black border-r border-slate-200">
+        <button id="new-conversation-button" onClick="console.log('new conversation')">{% trans "start-conversation-button" %}</button>
         <div id="htmx-past-conversations" class="w-full" 
         hx-post="{% url 'user_interface:chat-conversation-list' %}"
         hx-target="#htmx-past-conversations"
@@ -14,14 +15,21 @@
         <p>loading ...</p>
         </div>
     </div>
-    <div id="chat-body-wrapper" class="w-8/12 flex flex-col h-screen">
+    <div id="chat-body-wrapper" class="w-9/12 flex flex-col h-screen">
         <div id="language-model-select-wrapper" class="w-1/2 flex flex-col m-4">
-        <label for="language-model-placeholder">language-model-placeholder</label>
+            <form id="question-form" method="post" onSubmit="onSubmitQuestion(event)">
+                {% csrf_token %}
+                {{ forms.ModelSelectForm }}
+
+{{ dal_media }}
+            </form>
+{% comment "" %}
         <select id="language-model-placeholder" name="language-model-placeholder">
             <option value="language-model-1">1</option>
             <option value="language-model-2">2</option>
             <option value="language-model-3">3</option>
         </select>
+{% endcomment %}
         </div>
         <div id="conversation-log" class="w-full flex flex-1 flex-col h-4/6"
         hx-post="{% url 'user_interface:chat-conversation-log' %}"
@@ -34,7 +42,7 @@
         <div id="question-input-wrapper" class="bottom-0 left-0 w-full bg-gray-200 p-4">
             <form id="question-form" method="post" onSubmit="onSubmitQuestion(event)">
                 {% csrf_token %}
-                {{ form }}
+                {{ forms.QuestionForm }}
                 <button type="submit">{% trans "send-question-button" %}</button>
             </form>
         </div>

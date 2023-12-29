@@ -2,6 +2,7 @@ import uuid
 from django.utils import timezone
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MaxValueValidator
 
 # some predefined states questions can have
 GENERATION_STATES = [
@@ -17,6 +18,7 @@ class Question(models.Model):
     can easily be used to display a chat log in the frontend.
     TODO: Look how the models expect logs to be passed onto them and provide serializers.
     """
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True)
     conversation = models.ForeignKey("Conversation", on_delete=models.CASCADE)
     json = models.JSONField()
     answer = models.CharField(default="", null=False, blank=False)
@@ -35,7 +37,7 @@ class Conversation(models.Model):
     """
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True)
     date = models.DateTimeField(default=timezone.now)
-    title = models.CharField(max_length=255, null=False, blank=False)
+    title = models.CharField(max_length=255, default="New Conversation Started!", null=False, blank=False)
     
 class LanguageModel(models.Model):
     """
@@ -44,3 +46,27 @@ class LanguageModel(models.Model):
     """
     model_name = models.CharField(max_length=255, blank=False, null=False)
     common_name = models.CharField(max_length=30, blank=False, null=False)
+    #api = models.ForeignKey("Model_API", on_delete=models.CASCADE)
+    
+class Supported_API_Type(models.Model):
+    """
+    API Types may be added in a modular design enabling users to write
+    Plugins that add custom API Types that completely alter the way messages
+    are generated and may provide support to APIs that have not been forseen
+    to be added. Though this is in the far future.
+    """
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True)
+    name = models.CharField(max_length=30, blank=False, null=False, unique=True)
+
+class Model_API(models.Model):
+    """
+    To make integration of different model APIs easier and to provide support for diffrent kinds of apis
+    models should also be bound to one api which is then assigned a connection type i.e. tcp, https
+    """
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True)
+    common_name = models.CharField(max_length=30, blank=False, null=False, unique=True)
+    port = models.PositiveIntegerField(_("port"), blank=True, null=True, validators=[
+        MaxValueValidator(65535)
+        ])
+    uri = models.CharField(max_length=255, blank=True, null=True)
+    type = models.ForeignKey("Supported_API_Type", on_delete=models.CASCADE)

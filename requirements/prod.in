@@ -17,3 +17,4 @@ django<5
 django-widget-tweaks
 psycopg2
 zmq
+django-autocomplete-light>3.9.0

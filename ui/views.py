@@ -1,12 +1,16 @@
 import json
 import uuid
+from dal import autocomplete
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from ui.models import Question, Conversation
 from util.zmq_client import send_question
-from ui.forms import QuestionForm
+from ui.forms import QuestionForm, ModelSelectForm
+from ui.models import LanguageModel
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 DEFAULT_CHAT_MODEL_NAME = "llama-2-7b-chat.ggmlv3.q4_0.bin"
 DEFAULT_TIMEOUT = 100000  
@@ -55,24 +59,25 @@ def home_view(request):
 
 @login_required
 def chat_view(request):
+    if not request.session.get("conversation"):
+        request.session["conversation"] = Conversation.objects.latest("date")
+    print("conversation", request.session.get("conversation"))
+    chat_forms = {
+       "QuestionForm": QuestionForm,
+       "ModelSelectForm": ModelSelectForm,
+    }
     context = {
         "model": "",
         "chats": [],
-        "form": QuestionForm,
+        "forms": chat_forms,
         "hide_navbar": True,
+        "dal_media": autocomplete.Select2().media,
     }
     print("chat_object", request.session.get("model"))
 
     return render(request, "chat.html", context=context)
 
 # htmx
-#def question_input(request):
-    #if request.method == "POST":
-        #context = {
-            #"form": QuestionForm
-        #}
-        #return render(request, "htmx/question_input.html", context=context)
-
 @login_required
 def chat_conversation_log(request):
     """
@@ -185,16 +190,67 @@ def get_question(request):
 def conversation_list(request):
     """
     Partial view for displaying a list of conversations
+    TODO: Make this user specific.
     """
     if request.method == "POST":
+        conversation_id = request.POST.get("conversation")
+        if not conversation_id:
+            conversation_id = request.session.get("conversation")
+        # get all conversations or create a new one if none is saved
         #conversations = Conversation.objects.filter("")
         conversations = Conversation.objects.all()
         print("conversations: ", conversations)
         if len(conversations) == 0:
             conversation = Conversation.objects.create()
-            conversation.title = "new chat"
+            #conversation.title = "new chat"
             conversations = [conversation]
+
+        # in the frontend we want to display the date of the past conversations relative to the 
+        # current date unless it was longer than one year ago, this is much like how chatgpt does
+        # it right now
+        now = timezone.now()
+        conversations_date_dict = {}
+        for conversation in conversations:
+            date_string = ""
+            absolute_date = conversation.date
+            if not now.year == absolute_date.year:
+                date_string = absolute_date.strftime("%Y-%m-%d")
+            else:
+                time_passed = now - absolute_date
+                match (time_passed.days):
+                    case n if n<1:
+                        date_string = _("Today")
+                    case n if n<2:
+                        date_string = _("Yesterday")
+                    case n if n<7:
+                        date_string = _("This Week")
+                    case n if n<14:
+                        date_string = _("Last Week")
+                    case n if n<30:
+                        date_string = _("Last 30 Days") 
+                    case _:
+                        date_string = absolute_date.strftime("%B")
+                
+            if not conversations_date_dict.get(date_string):
+                conversations_date_dict[date_string] = []
+            conversations_date_dict[date_string].append(conversation)
+
         context = {
-            "conversation_list": [conversations],
+            "conversation_list": conversations_date_dict,
+            "selected_conversation": conversation_id,
         }
         return render(request, "htmx/conversation_list.html", context=context)
+
+# dal
+class DAL_Model_Name(autocomplete.Select2QuerySetView):
+    model = LanguageModel
+    def get_queryset(self):
+        qs = LanguageModel.objects.all()
+
+        if self.q:
+            qs = qs.filter(common_name=self.q)
+
+        return qs
+
+    def get_result_label(self, obj):
+        return obj.common_name

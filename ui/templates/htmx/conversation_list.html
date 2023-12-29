@@ -1,13 +1,16 @@
 {% load i18n %}
 {% load static %}
 
-{% for date in conversation_list %}
+{% for date, conversations in conversation_list.items %}
 <div>
-    <h4>date-placeholder</h4>
+    <h4 class="text-slate-500">{{ date }}</h4>
     <ul>
-        
-{% for conversation in date %}
+{% for conversation in conversations %}
+{% if selected_conversation|stringformat:"s" == conversation.id|stringformat:"s" %}
+<li class="selected">{{ conversation.title }}</li>
+{% else %}
 <li>{{ conversation.title }}</li>
+{% endif %}
 {% endfor %}
     </ul>
 </div>

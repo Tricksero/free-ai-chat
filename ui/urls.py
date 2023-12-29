@@ -1,5 +1,5 @@
-from django.contrib import admin
-from django.urls import path
+#from django.contrib import admin
+from django.urls import path, re_path
 from . import views
 
 urlpatterns = [
@@ -13,4 +13,6 @@ urlpatterns = [
     path('new_edit_question/', views.new_or_edit_question, name="question-new-edit"),
     # ajax
     path('regular_pull/', views.regular_pull, name="regular-pull"),
+    # dal
+    re_path(r'^model_name-autocomplete/$', views.DAL_Model_Name.as_view(), name='model_name-autocomplete'),
 ]
