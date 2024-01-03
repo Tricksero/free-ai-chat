@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator
+from django.contrib.auth import get_user_model
 
 # some predefined states questions can have
 GENERATION_STATES = [
@@ -33,12 +34,12 @@ class Question(models.Model):
 class Conversation(models.Model):
     """
     Model that saves basic information about a conversation to be displayed in a list to the left.
-    TODO: Connect this to a user.
     """
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True)
     date = models.DateTimeField(default=timezone.now)
     title = models.CharField(max_length=255, default="New Conversation Started!", null=False, blank=False)
-    
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, blank=False, null=False)
+
 class LanguageModel(models.Model):
     """
     Names of models available to chat with.
@@ -47,7 +48,10 @@ class LanguageModel(models.Model):
     model_name = models.CharField(max_length=255, blank=False, null=False)
     common_name = models.CharField(max_length=30, blank=False, null=False)
     #api = models.ForeignKey("Model_API", on_delete=models.CASCADE)
-    
+
+    def __str__(self):
+        return self.common_name
+
 class Supported_API_Type(models.Model):
     """
     API Types may be added in a modular design enabling users to write

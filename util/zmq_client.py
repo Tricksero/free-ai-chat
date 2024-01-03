@@ -19,8 +19,8 @@ def send_question(question):
     #  Socket to talk to server
     print("Connect...")
     socket = context.socket(zmq.REQ)
-    socket.connect("tcp://localhost:5555")
     socket.setsockopt(zmq.CONNECT_TIMEOUT, 5000)
+    socket.connect("tcp://localhost:5555")
     print("Connected")
     #socket.RCVTIMEO = 20000
 

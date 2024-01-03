@@ -6,6 +6,53 @@ import { testTypescript } from "../ts/test.ts";
 import "../css/main.css";
 import { get } from "jquery";
 
+async function onChangeConversation(event) {
+    var conversation_id = event.target.id
+    console.log("change_conversation: ", window.change_conversation,)
+    var response = await $.ajax({
+        url: `${window.change_conversation}`,
+        method: 'POST',
+        dataType: 'json',
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRFToken": getCookie("csrftoken"),  // don't forget to include the 'getCookie' function
+        },
+        data: { "conversation": conversation_id },
+        success: function (response) {
+            // Handling the successful response
+            console.log('Data received:', response);
+        },
+        error: function (xhr, status, error) {
+            // Handling errors
+            console.error('Request failed:', status, error);
+        }
+    });
+    window.location.reload();
+}
+
+async function onCreateConversation(event) {
+    console.log("create_conversation: ", window.create_conversation,)
+    var response = await $.ajax({
+        url: `${window.create_conversation}`,
+        method: 'POST',
+        dataType: 'json',
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRFToken": getCookie("csrftoken"),  // don't forget to include the 'getCookie' function
+        },
+        data: {},
+        success: function (response) {
+            // Handling the successful response
+            console.log('Data received:', response);
+        },
+        error: function (xhr, status, error) {
+            // Handling errors
+            console.error('Request failed:', status, error);
+        }
+    });
+    window.location.reload();
+}
+
 document.body.addEventListener("htmx:afterRequest", (event) => {
     var exit = false
     if (exit) {
@@ -17,13 +64,18 @@ document.body.addEventListener("htmx:afterRequest", (event) => {
 
     }
     if (event.detail.target.id == "conversation-log") {
-
-    // Get the scrollable element
-    //var scrollableElement = $("#conversation-log")[0];
-    var scrollableElement = document.getElementById("conversation-log")
-
-    // Scroll the element to the bottom
-    scrollableElement.scrollTop = scrollableElement.scrollHeight;
+        // Get the scrollable element
+        var scrollableElement = document.getElementById("conversation-log")
+        // Scroll the element to the bottom
+        scrollableElement.scrollTop = scrollableElement.scrollHeight;
+    }
+    if (event.detail.target.id == "htmx-past-conversations") {
+        $(".conversation-list").find("a").not(".selected").on("click", function (event) {
+            onChangeConversation(event)
+        })
+        $("#new-conversation-button").on("click", function (event) {
+            onCreateConversation(event)
+        })
     }
 })
 
@@ -80,7 +132,6 @@ async function createQuestionObject(response_dict) {
     return pairDiv
 }
 
-
 async function onSubmitQuestion(event) {
     event.preventDefault();
     var value = $("#id_question").get(0).value
@@ -107,4 +158,27 @@ async function onSubmitQuestion(event) {
     createQuestionObject(response)
 }
 
+//async function onChangeModel(event) {
+//var response = await $.ajax({
+//url: window.change_conversation,
+//method: 'POST',
+//dataType: 'json',
+//headers: {
+//"X-Requested-With": "XMLHttpRequest",
+//"X-CSRFToken": getCookie("csrftoken"),  // don't forget to include the 'getCookie' function
+//},
+//data: { question_id: questionId },
+//success: function (response) {
+//// Handling the successful response
+//console.log('Data received:', response);
+//},
+//error: function (xhr, status, error) {
+//// Handling errors
+//console.error('Request failed:', status, error);
+//}
+//});
+//}
+
+
 window.onSubmitQuestion = onSubmitQuestion
+window.onChangeConversation = onChangeConversation

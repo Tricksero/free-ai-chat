@@ -13,7 +13,11 @@ model_name_field = forms.ModelChoiceField(
 )
 
 class QuestionForm(forms.Form):
-    question = forms.CharField()
-    
+    question = forms.CharField(widget=forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': _('message-chatbot'),
+            })
+        )
+
 class ModelSelectForm(forms.Form):
     model_name = model_name_field

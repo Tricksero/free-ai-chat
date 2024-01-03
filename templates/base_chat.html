@@ -6,7 +6,7 @@ TODO: Maybe move over to ui or split the base template up entirely.
 {% load i18n %}
 <!DOCTYPE html>
 <html lang="de">
-        
+
     <head>{% include "head.html" %}</head>
     <body
 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
@@ -17,6 +17,9 @@ hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
 <script>
         window.new_question_url = "{% url 'user_interface:question-new-edit' %}"
         window.regular_pull = "{% url 'user_interface:regular-pull' %}"
+        window.change_conversation = "{% url 'user_interface:change-conversation' %}"
+        window.create_conversation = "{% url 'user_interface:create-conversation' %}"
+        window.change_model = "{% url 'user_interface:change-model_name' %}"
 </script>
 <script src="{% static 'js/base.js' %}"></script>
     <div id="base-header-main-wrapper" class="h-screen flex flex-col">

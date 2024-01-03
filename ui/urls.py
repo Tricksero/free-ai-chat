@@ -13,6 +13,9 @@ urlpatterns = [
     path('new_edit_question/', views.new_or_edit_question, name="question-new-edit"),
     # ajax
     path('regular_pull/', views.regular_pull, name="regular-pull"),
+    path('change_conversation', views.change_conversation, name="change-conversation"),
+    path('create_conversation', views.create_conversation, name="create-conversation"),
+    path('change_model', views.change_model, name="change-model_name"),
     # dal
     re_path(r'^model_name-autocomplete/$', views.DAL_Model_Name.as_view(), name='model_name-autocomplete'),
 ]

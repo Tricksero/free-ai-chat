@@ -6,7 +6,7 @@
 <div id="chat-page-wrapper" class="w-full flex flex-row h-full">
     <div id="conversations-wrapper" class="flex flex-col w-3/12 p-4 bg-black border-r border-slate-200">
         <button id="new-conversation-button" onClick="console.log('new conversation')">{% trans "start-conversation-button" %}</button>
-        <div id="htmx-past-conversations" class="w-full" 
+        <div id="htmx-past-conversations" class="w-full"
         hx-post="{% url 'user_interface:chat-conversation-list' %}"
         hx-target="#htmx-past-conversations"
         hx-swap="innerHTML"
@@ -16,10 +16,21 @@
         </div>
     </div>
     <div id="chat-body-wrapper" class="w-9/12 flex flex-col h-screen">
-        <div id="language-model-select-wrapper" class="w-1/2 flex flex-col m-4">
+        <div class="w-full flex flex-row">
+        <div class="w-1/2 flex flex-row mt-4 ml-4 mb-0 justify-between">
+        <span class="flex-initial">{% trans "current-model" %}: {{ model.common_name }}</span>
+        </div>
+        <div class="w-1/2 flex flex-row mt-4 ml-4 mb-0 justify-between">
+        <span class="flex-initial">{% trans "model-version-id" %}: {{ model.model_name }}</span>
+        </div>
+        </div>
+        <div id="language-model-select-wrapper" class="w-1/2 flex flex-col mt-0 ml-4 mb-2">
             <form id="question-form" method="post" onSubmit="onSubmitQuestion(event)">
                 {% csrf_token %}
                 {{ forms.ModelSelectForm }}
+                <button id="change-model-button" type="submit" class="bg-transparent hover:bg-slate-500 text-slate-700 font-semibold hover:text-white py-1 px-2 border border-slate-500 hover:border-transparent rounded">
+                    {% trans "change" context "text of change model button" %}
+                </button>
 
 {{ dal_media }}
             </form>
@@ -39,11 +50,13 @@
         >
         load ...
         </div>
-        <div id="question-input-wrapper" class="bottom-0 left-0 w-full bg-gray-200 p-4">
-            <form id="question-form" method="post" onSubmit="onSubmitQuestion(event)">
+        <div id="question-input-wrapper" class="bottom-0 left-0 justify-center items-center flex w-full bg-gray-200 p-4">
+            <form id="question-form" class="flex flex-row w-6/12" method="post" onSubmit="onSubmitQuestion(event)">
                 {% csrf_token %}
-                {{ forms.QuestionForm }}
-                <button type="submit">{% trans "send-question-button" %}</button>
+                {% render_field forms.QuestionForm.question %}
+                <button id="change-model-button" type="submit" class="bg-transparent hover:bg-slate-500 text-slate-700 font-semibold hover:text-white py-1 px-2 border border-slate-500 hover:border-transparent rounded">
+                    {% trans "send" context "send question button for chat messages" %}
+                </button>
             </form>
         </div>
     </div>
