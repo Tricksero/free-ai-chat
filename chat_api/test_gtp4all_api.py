@@ -17,9 +17,9 @@ class GptChatApiTest(unittest.TestCase):
         """test the GPT4ALL class
         """
 
-        modle_name = [model["filename"] for model in gpt4all_chat.get_list_of_all_models()][0]
+        model_name = [model["filename"] for model in gpt4all_chat.get_list_of_all_models()][0]
 
-        gpt_object = gpt4all_chat.GPT4ALL(modle_name)
+        gpt_object = gpt4all_chat.GPT4ALL(model_name)
 
         message = "The tests does not run on the right class."
 
@@ -59,9 +59,9 @@ class GptChatApiTest(unittest.TestCase):
         """test the GPT4ALL class
         """
 
-        modle_list = [model["filename"] for model in gpt4all_chat.get_list_of_all_models()]
+        model_list = [model["filename"] for model in gpt4all_chat.get_list_of_all_models()]
 
-        chat_object = gpt4all_chat.Chat(modle_list[1])
+        chat_object = gpt4all_chat.Chat(model_list[1])
 
         message = "The tests does not run on the right class."
 
@@ -105,7 +105,7 @@ class GptChatApiTest(unittest.TestCase):
 
         # test change model
 
-        chat_object.change_model(modle_list[-1])
+        chat_object.change_model(model_list[-1])
 
         new_session = chat_object.save_session()
 
@@ -123,18 +123,18 @@ class GptChatApiTest(unittest.TestCase):
         """test all functions in the api.
         """
 
-        modle_list = [model["filename"] for model in gpt4all_chat.get_list_of_all_models()]
+        model_list = [model["filename"] for model in gpt4all_chat.get_list_of_all_models()]
 
-        check_download_working = gpt4all_chat.download_model(modle_list[2])
+        check_download_working = gpt4all_chat.download_model(model_list[2])
 
         message = "Given model download was expected."
 
         self.assertEqual(check_download_working,
-                         modle_list[2] + \
+                         model_list[2] + \
                             " is downloaded to " + \
                                 gpt4all_chat.get_save_path(), message)
 
-        check_download_all_ready = gpt4all_chat.download_model(modle_list[2])
+        check_download_all_ready = gpt4all_chat.download_model(model_list[2])
 
         message = "Given model is as all ready downloaded was expected."
 
@@ -144,7 +144,7 @@ class GptChatApiTest(unittest.TestCase):
 
         local_models = os.listdir(save_path)
 
-        msg = 'the listed models are unequal to the models in the cache.'
+        # msg = 'the listed models are unequal to the models in the cache.'
 
         # self.assertEqual(gpt4all_chat.local_models(), local_models, msg)
 

@@ -35,7 +35,7 @@ unit-test-gpt4all-job:   # This job runs in the test stage.
     - inv sync
     - python chat_api/test_gpt4all_api.py
     - echo "Code coverage is x%"
-    - python chat_api/test_networktraffic.py
+    - python chat_api/test_ollama_api.py
 
 lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
@@ -45,8 +45,10 @@ lint-test-job:   # This job also runs in the test stage.
     - apt install -y python3.11-venv
     - python3.11 -m venv venv
     - source venv/bin/activate
+    - pip install --upgrade pip
     - pip install invoke pip-tools
     - inv sync
+    - safety check
     - mypy ./
     - pylint ./chat_api/
     - pylint ./tasks.py

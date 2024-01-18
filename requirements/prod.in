@@ -1,4 +1,4 @@
-django<5
+django>=4.2.7<5
 certifi
 cffi
 charset-normalizer
