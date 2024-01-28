@@ -1,17 +1,17 @@
 version: "3.9"
 
 services:
-  db:
-    image: mysql:8.0
-    volumes:
-      - mysql_data:/var/lib/mysql/
-    environment:
-      - MYSQL_ROOT_PASSWORD=gpt4all
-      - MYSQL_DATABASE=gpt4all
-      - MYSQL_USER=gpt4all
-      - MYSQL_PASSWORD=gpt4all
-    ports:
-      - "3307:3306"
+  #db:
+    #image: mysql:8.0
+    #volumes:
+      #- mysql_data:/var/lib/mysql/
+    #environment:
+      #- MYSQL_ROOT_PASSWORD=gpt4all
+      #- MYSQL_DATABASE=gpt4all
+      #- MYSQL_USER=gpt4all
+      #- MYSQL_PASSWORD=gpt4all
+    #ports:
+      #- "3307:3306"
 
   ollama:
     build:
@@ -28,6 +28,42 @@ services:
       - "8000:8000"
     volumes:
       - ./:/gpt4all/
-volumes:
-  mysql_data:
+#volumes:
+  #mysql_data:
 
+  #db:
+    #image: mysql:8.0
+    #volumes:
+      #- mysql_data:/var/lib/mysql/
+    #environment:
+      #- MYSQL_ROOT_PASSWORD=gpt4all
+      #- MYSQL_DATABASE=gpt4all
+      #- MYSQL_USER=gpt4all
+      #- MYSQL_PASSWORD=gpt4all
+    #ports:
+      #- "3307:3306"
+  db:
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=gpt4all
+      - POSTGRES_USER=gpt4all
+      - POSTGRES_PASSWORD=gpt4all
+    ports:
+      - "5433:5432"
+  #web:
+    #build:
+      #context: .
+    #environment:
+      #- USING_DOCKER=True
+    #ports:
+      #- "8000:8000"
+    #volumes:
+      #- ./:/gpt4all/
+    #links:
+      #- db
+volumes:
+  postgres_data:
+  #mysql_data:
+      #- "3307:3306"

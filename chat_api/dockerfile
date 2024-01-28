@@ -3,8 +3,12 @@ FROM python:3.9-bookworm
 
 RUN apt-get update && apt upgrade -y
 
+<<<<<<< HEAD:chat_api/dockerfile
 RUN apt-get update && apt install -y python3.11-venv
 #&& apt-get install -y redis-server libpcap0.8
+=======
+RUN apt-get update && apt-get install -y redis-server libpcap0.8
+>>>>>>> django_webapp:dockerfile
 
 WORKDIR /gpt4all
 

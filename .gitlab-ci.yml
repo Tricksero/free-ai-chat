@@ -16,18 +16,27 @@
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
+<<<<<<< HEAD
 image: python:3.9-bookworm
+=======
+image: python:3.11.4-bullseye
+>>>>>>> django_webapp
 
 
 stages:          # List of stages for jobs, and their order of execution
   - test
 
 
+<<<<<<< HEAD
 unit-test-gpt4all-job:   # This job runs in the test stage.
+=======
+unit-test-job:   # This job runs in the test stage.
+>>>>>>> django_webapp
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - echo "Running unit tests..."
     - apt-get update && apt upgrade -y
+<<<<<<< HEAD
     - apt install -y python3.11-venv
     - python3.11 -m venv venv
     - source venv/bin/activate
@@ -36,12 +45,21 @@ unit-test-gpt4all-job:   # This job runs in the test stage.
     - python chat_api/test_gpt4all_api.py
     - echo "Code coverage is x%"
     - python chat_api/test_ollama_api.py
+=======
+    - python -m venv venv
+    - source venv/bin/activate
+    - pip install invoke pip-tools
+    - inv sync
+    - python chat_api/test.py
+    - echo "Code coverage is x%"
+>>>>>>> django_webapp
 
 lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
   script:
     - echo "Linting code..."
     - apt-get update && apt upgrade -y
+<<<<<<< HEAD
     - apt install -y python3.11-venv
     - python3.11 -m venv venv
     - source venv/bin/activate
@@ -49,6 +67,12 @@ lint-test-job:   # This job also runs in the test stage.
     - pip install invoke pip-tools
     - inv sync
     - safety check
+=======
+    - python -m venv venv
+    - source venv/bin/activate
+    - pip install invoke pip-tools
+    - inv sync
+>>>>>>> django_webapp
     - mypy ./
     - pylint ./chat_api/
     - pylint ./tasks.py

@@ -1,0 +1,15 @@
+.container {
+  height: 200px; /* Set a fixed height for the container */
+  overflow-y: scroll; /* Enable vertical scrolling */
+  border: 1px solid #ccc; /* Optional: Add a border for visualization */
+}
+
+.content {
+  height: auto; /* Auto height */
+  transform: scaleY(-1); /* Flip the content upside down */
+}
+
+/* Flip individual items back */
+.content p {
+  transform: scaleY(-1); /* Flip individual items back */
+}

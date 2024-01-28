@@ -1,0 +1,12 @@
+services:
+  proxy:
+    build:
+      context: ./enginex/
+    container_name: proxy_server
+    hostname: proxy_server
+    ports:
+      - "80:80" # Adjust the port as needed
+    # Add any other configurations for your proxy server
+
+
+

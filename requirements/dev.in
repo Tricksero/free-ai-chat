@@ -1,11 +1,18 @@
 -r prod.in
 
+# utility
 invoke
 pip-tools
+
+# quality assurance
 mypy
 pylint
 safety
+<<<<<<< HEAD
 
 # for network analyse (chat_api/test.py)
 # psutil
 # scapy
+=======
+djlint
+>>>>>>> django_webapp
