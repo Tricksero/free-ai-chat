@@ -169,11 +169,6 @@ cython_debug/
 **/.devcontainer
 requirements/**.txt
 .invoke.yml
-<<<<<<< HEAD
-**/venv_test
-**/venv_network
-=======
 **node_modules**
 **/venv_test
 **/venv_network
->>>>>>> django_webapp

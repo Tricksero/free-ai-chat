@@ -1,17 +1,10 @@
-<<<<<<< HEAD
 django>=4.2.7<5
-=======
->>>>>>> django_webapp
 certifi
 cffi
 charset-normalizer
 colorama
 cryptography
-<<<<<<< HEAD
 gpt4all>=2.0.2
-=======
-gpt4all<1.0.9
->>>>>>> django_webapp
 greenlet
 idna
 pycparser
