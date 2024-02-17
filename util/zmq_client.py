@@ -13,7 +13,7 @@ from unittest import TestCase
 TEST_QUESTION = "Show me a hello world program in python."
 ID = "12"
 
-def send_question(question):
+def send_question(question, id):
     context = zmq.Context()
 
     #  Socket to talk to server
@@ -45,10 +45,12 @@ def send_question(question):
 
 class TCPClientTestCase(TestCase):
     def setUp(self) -> None:
+        self.ID = "12"
         return super().setUp()
 
     def test_send_question(self):
-        send_question(TEST_QUESTION, ID)
+        send_question(TEST_QUESTION, self.ID)
+        pass
 
 if __name__ == "__main__":
     unittest.main()

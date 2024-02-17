@@ -10,24 +10,27 @@ import os
 import sys
 import json
 from pathlib import Path
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 sys.path.append(str(BASE_DIR))
 
-from chat_api.gpt4all_chat import GPT4ALL, Chat
+from chat_api.gpt4all_chat import Chat
 
 DEFAULT_CHAT_MODEL_NAME = "llama-2-7b-chat.ggmlv3.q4_0.bin"
-DEFAULT_TIMEOUT = 100000  
-chat_obj = Chat(DEFAULT_CHAT_MODEL_NAME)
+DEFAULT_TIMEOUT = 100000
+# chat_obj = Chat(DEFAULT_CHAT_MODEL_NAME)
+chat_obj = Chat()
 context = zmq.Context()
 socket = context.socket(zmq.REP)
 socket.bind("tcp://*:5555")
+
 
 def question_response(gen):
     """
     This function aims to contribute to a quick visibly building response by generating response fragments word by word
     until a word limit is reached or a generation time limit is reached and then returns that fragment
-    to the view handling the display of this message. 
+    to the view handling the display of this message.
     """
     # should probably depend on how many characters are already to be displayed
     MAX_GENERATION_TIME = 2
@@ -46,6 +49,7 @@ def question_response(gen):
     print("generated", response_msg)
     return response_msg, gen, state
 
+
 def build_json_reponse(session, response, state):
     chat_response = {
         "question_id": session,
@@ -57,8 +61,11 @@ def build_json_reponse(session, response, state):
     response_json = response_json.encode("utf-8")
     return response_json
 
+
 cached_generator = {}
 print("start loop: ")
+question = ""
+message_dict = {}
 while True:
     message = socket.recv()
     message = message.decode("utf-8")
@@ -70,7 +77,7 @@ while True:
         except Exception as e:
             print("not usable json: ", e)
         session = message_dict.get("question_id")
-        question = message_dict.get("question_text")
+        question = message_dict.get("question_text", "")
         client_question_state = message_dict.get("state")
 
         # get or create generator and generate answer
@@ -85,7 +92,7 @@ while True:
             gen = chat_obj.new_message_stream(question)
         response, gen, state = question_response(gen=gen)
 
-        # caching 
+        # caching
         # TODO: prevent memory leaks due to too many cached gens, also maybe find a way to do
         # proper chaching
         if state == "finished":
@@ -93,7 +100,7 @@ while True:
             gen = cached_generator.get(session)
             if gen:
                 cached_generator[session]
-        else: 
+        else:
             print(f"cache generator of {session}")
             cached_generator[session] = gen
 

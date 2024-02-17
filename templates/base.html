@@ -2,68 +2,61 @@
 {% load i18n %}
 <!DOCTYPE html>
 <html lang="de">
-
     <head>{% include "head.html" %}</head>
-    <body
-hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-    >
-
-<link rel="stylesheet" href="{% static 'css/base.css' %}">
-<link rel="stylesheet" href="{% static 'tailwind/tailwind.css' %}">
-<script>
+    <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <link rel="stylesheet" href="{% static 'tailwind/tailwind.css' %}">
+        <script>
         window.new_question_url = "{% url 'user_interface:question-new-edit' %}"
         window.regular_pull = "{% url 'user_interface:regular-pull' %}"
         window.change_conversation = "{% url 'user_interface:change-conversation' %}"
         window.create_conversation = "{% url 'user_interface:create-conversation' %}"
         window.change_model = "{% url 'user_interface:change-model_name' %}"
-</script>
-<script src="{% static 'js/base.js' %}"></script>
-    <div id="base-header-main-wrapper" class="h-screen flex flex-col">
-        <header>
-            {% include "components/navbar.html" %}
-            {% comment "" %}
+        </script>
+        <script src="{% static 'js/base.js' %}"></script>
+        <div id="base-header-main-wrapper" class="h-screen flex flex-col">
+            <header>
+                {% include "components/navbar.html" %}
+                {% comment "" %}
             {% include "components/breadcrumb.html" %}
 
 <div class="container">
-    <a class="navbar-brand logo-container"
-       href="{% url 'user_interface:home' %}">
-        <img class="logo"
-             src="{% static 'img/content/hhu_logo.svg' %}"
-             alt="Logo der MIZ.it">
+    <a class="navbar-brand logo-container" href="{% url 'user_interface:home' %}">
+        <img class="logo" src="{% static 'img/content/hhu_logo.svg' %}" alt="Logo der MIZ.it">
     </a>
 </div>
-            {% endcomment %}
-        </header>
-        <main class="flex flex-grow flex-col m-4">
-            {% if messages %}
-                <div class="container">
-                    {% for message in messages %}
-                        <div role="alert"
-                             {% if message.tags %}class="message alert alert-dismissible fade show {{ message.tags }} "{% endif %}>
-                            <p aria-live="assertive">{{ message }}</p>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true"></span>
-                            </button>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% elif form.errors %}
-                <div class="container">
-                    <div role="alert" class="alert alert-dismissible alert-warning">
-                        {% for field in form %}
-                            {% for error in field.errors %}<p>{{ error }}</p>{% endfor %}
+                {% endcomment %}
+            </header>
+            <main class="flex flex-grow flex-col m-4">
+                {% if messages %}
+                    <div class="container">
+                        {% for message in messages %}
+                            <div role="alert"
+                                 {% if message.tags %}class="message alert alert-dismissible fade show {{ message.tags }} "{% endif %}>
+                                <p aria-live="assertive">{{ message }}</p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true"></span>
+                                </button>
+                            </div>
                         {% endfor %}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true"></span>
-                        </button>
                     </div>
-                </div>
-            {% endif %}
-            <div class="w-10/12 m-8 h-full" id="content">
-                {% block content %}
-                {% endblock content %}
+                    {% if form.errors %}
+                        <div class="container">
+                            <div role="alert" class="alert alert-dismissible alert-warning">
+                                {% for field in form %}
+                                    {% for error in field.errors %}<p>{{ error }}</p>{% endfor %}
+                                {% endfor %}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="w-10/12 m-8 h-full" id="content">
+                        {% block content %}
+                        {% endblock content %}
+                    </div>
+                </main>
             </div>
-        </main>
-    </div>
-    </body>
-</html>
+        </body>
+    </html>

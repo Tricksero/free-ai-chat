@@ -2,19 +2,12 @@
 GPT4ALL chat API.
 """
 import os
-<<<<<<< HEAD
 import requests # type: ignore
 import gpt4all # type: ignore
 from gpt4all import GPT4All as GPT4AllBaseClass # type: ignore
 
 # ollama: curl http://ollama:9000
 
-=======
-import concurrent.futures
-import gpt4all # type: ignore
-from gpt4all import GPT4All as GPT4AllBaseClass # type: ignore
-
->>>>>>> django_webapp
 # gab ein gpt4all update da nach schauen, dass das dann wieder läuft?
 
 # das hier testen
@@ -75,11 +68,7 @@ class GPT4ALL(GPT4AllBaseClass):
 
 
 class Chat:
-<<<<<<< HEAD
     def __init__(self, model_name: str = "mistral-7b-openorca.Q4_0.gguf", token = 200) -> None:
-=======
-    def __init__(self, model_name: str = "llama-2-7b-chat.ggmlv3.q4_0.bin", token = 200) -> None:
->>>>>>> django_webapp
         self.model_name = model_name
         self.model = GPT4ALL(model_name)
         self.token = token
@@ -112,16 +101,11 @@ class Chat:
         self.model.load_session(chat)
 
 
-<<<<<<< HEAD
 def download_model(model: str, max_retrys=5):
-=======
-def download_model(model: str):
->>>>>>> django_webapp
     # print(get_save_path()+"/"+model)
     if os.path.exists(get_save_path()+"/"+model):
         return "model all ready exist"
 
-<<<<<<< HEAD
     model_name = gpt4all.gpt4all.append_extension_if_missing(model)
     try:
         GPT4AllBaseClass.download_model(
@@ -132,11 +116,6 @@ def download_model(model: str):
         else:
             return f"the model {model} was requested but unable to download"
 
-=======
-    model_name = gpt4all.gpt4all.append_bin_suffix_if_missing(model)
-    GPT4AllBaseClass.download_model(
-                model_name, get_save_path())
->>>>>>> django_webapp
     return model + " is downloaded to " + get_save_path()
 
 def get_list_of_all_models() -> dict:
@@ -144,17 +123,8 @@ def get_list_of_all_models() -> dict:
 
 def download_all_models():
     model_names = [model["filename"] for model in get_list_of_all_models()]
-<<<<<<< HEAD
     response = [download_model(model_name) for model_name in model_names]
     return response
-=======
-    results = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=len(model_names)) as executor:
-        #use multithreading to execute downloads at the same time.
-        response = [executor.submit(download_model, model_name) for model_name in model_names]
-        for i in concurrent.futures.as_completed(response):
-            results.append(i.result())
->>>>>>> django_webapp
 
 
 def get_save_path():

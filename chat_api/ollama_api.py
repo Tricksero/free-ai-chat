@@ -1,20 +1,22 @@
 """_summary_
 """
+
 import json
-import requests # type: ignore
+import requests  # type: ignore
 
 # model list https://ollama.ai/library
 
 
 # curl http://ollama:11434/api/pull -d '{"name": "llama2"}'
 
+
 def download_model(modelname):
     url = "http://ollama:11434/api/"
     data = {"name": modelname}
 
-    response = requests.post(url + "pull", json=data, stream= True)
+    response = requests.post(url + "pull", json=data, stream=True)
     for line in response.iter_lines():
-        print(json.loads(line.decode()),type(json.loads(line.decode())))
+        print(json.loads(line.decode()), type(json.loads(line.decode())))
         print("")
 
     # response = json.loads(response.text)
@@ -40,10 +42,7 @@ def local_models():
 
 def create_init_promt(name, base_model, init_promt):
     url = "http://ollama:11434/api/"
-    data = {
-        "name": name,
-        "modelfile": f"From {base_model}\nSYSTEM {init_promt}"
-    }
+    data = {"name": name, "modelfile": f"From {base_model}\nSYSTEM {init_promt}"}
     response = requests.post(url + "create", json=data)
 
     for line in response.iter_lines():
@@ -52,13 +51,12 @@ def create_init_promt(name, base_model, init_promt):
         print("")
 
 
-
 class Chat:
     def __init__(self, model_name: str = "llama2") -> None:
         self.model_name = model_name
         self.chat_session: list = []
 
-    def new_message(self, msg,img: list = []):
+    def new_message(self, msg, img: list = []):
         """Generate a new message.
 
         Args:
@@ -67,17 +65,16 @@ class Chat:
         """
         url = "http://ollama:11434/api/"
         self.chat_session.append(
-
-                {
-                    "role": "user",
-                    "content": msg,
-                }
-            )
-        data= {
+            {
+                "role": "user",
+                "content": msg,
+            }
+        )
+        data = {
             "model": self.model_name,
             "messages": self.chat_session,
-    "images": img, # in einer Liste als base64 encoded
-    }
+            "images": img,  # in einer Liste als base64 encoded
+        }
 
         response = requests.post(url + "chat", json=data)
         a = ""
@@ -93,21 +90,20 @@ class Chat:
         )
         return a
 
-    def new_message_stream(self, msg,img: list = []):
+    def new_message_stream(self, msg, img: list = []):
         self.chat_session.append(
-
-                {
-                    "role": "user",
-                    "content": msg,
-                }
-            )
+            {
+                "role": "user",
+                "content": msg,
+            }
+        )
         url = "http://ollama:11434/api/"
-        data= {
+        data = {
             "model": self.model_name,
             "messages": self.chat_session,
-    "images": img, # in einer Liste als base64 encoded
-    }
-        response = requests.post(url + "chat", json=data, stream= True)
+            "images": img,  # in einer Liste als base64 encoded
+        }
+        response = requests.post(url + "chat", json=data, stream=True)
         a = ""
         self.chat_session.append(
             {
@@ -119,9 +115,10 @@ class Chat:
             if "error" in json.loads(line.decode()):
                 yield json.loads(line.decode())
                 break
-            self.chat_session[-1]["content"] += json.loads(line.decode())["message"]["content"]
+            self.chat_session[-1]["content"] += json.loads(line.decode())["message"][
+                "content"
+            ]
             yield json.loads(line.decode())["message"]["content"]
-
 
     def change_msg(self, new_msg: str, index: int):
         old_chat = self.chat_session
@@ -134,7 +131,6 @@ class Chat:
 
     def load_session(self, chat_session: list):
         self.chat_session = chat_session
-
 
     def change_model(self, new_model_name):
         self.model_name = new_model_name

@@ -1,5 +1,6 @@
 """tests for the gpt4all chat api
 """
+
 import unittest
 import os
 import gpt4all_chat
@@ -12,10 +13,8 @@ class GptChatApiTest(unittest.TestCase):
         unittest (TestCase): unittest base class.
     """
 
-
     def test_class_gpt4all(self):
-        """test the GPT4ALL class
-        """
+        """test the GPT4ALL class"""
 
         gpt_object = gpt4all_chat.GPT4ALL("llama-2-7b-chat.ggmlv3.q4_0.bin")
 
@@ -30,7 +29,6 @@ class GptChatApiTest(unittest.TestCase):
         message = "The return of the network have the wrong datatype."
 
         self.assertIsInstance(answer, str, message)
-
 
         # test save and load session
 
@@ -48,14 +46,8 @@ class GptChatApiTest(unittest.TestCase):
 
         gpt_object.load_session(session)
 
-
-
-
-
-
     def test_class_chat(self):
-        """test the GPT4ALL class
-        """
+        """test the GPT4ALL class"""
 
         chat_object = gpt4all_chat.Chat("llama-2-7b-chat.ggmlv3.q4_0.bin")
 
@@ -71,7 +63,9 @@ class GptChatApiTest(unittest.TestCase):
 
         self.assertIsInstance(answer, str, message)
 
-        answer = chat_object.new_message_stream('write a "Hello world" program in python')
+        answer = chat_object.new_message_stream(
+            'write a "Hello world" program in python'
+        )
 
         message = "The return of the network have the wrong datatype."
 
@@ -93,7 +87,7 @@ class GptChatApiTest(unittest.TestCase):
 
         # test change massage
 
-        chat_object.change_msg('define cybersecurity', 0)
+        chat_object.change_msg("define cybersecurity", 0)
 
         new_session = chat_object.save_session()
 
@@ -105,27 +99,38 @@ class GptChatApiTest(unittest.TestCase):
 
         new_session = chat_object.save_session()
 
-        self.assertNotEqual(session, new_session, "changing model and keep session failed")
+        self.assertNotEqual(
+            session, new_session, "changing model and keep session failed"
+        )
 
         answer = chat_object.new_message('write a "Hello world" program in python')
 
-        message = "The return of the network have the wrong datatype after swapping model"
+        message = (
+            "The return of the network have the wrong datatype after swapping model"
+        )
 
         self.assertIsInstance(answer, str, message)
 
-
-
     def test_miscellaneous_api_functions(self):
-        """test all functions in the api.
-        """
+        """test all functions in the api."""
 
-        check_download_working = gpt4all_chat.download_model("ggml-model-gpt4all-falcon-q4_0.bin")
+        check_download_working = gpt4all_chat.download_model(
+            "ggml-model-gpt4all-falcon-q4_0.bin"
+        )
 
         message = "Given model download was expected."
 
-        self.assertEqual(check_download_working, "ggml-model-gpt4all-falcon-q4_0.bin" + " is downloaded to " + gpt4all_chat.get_save_path(), message)
+        self.assertEqual(
+            check_download_working,
+            "ggml-model-gpt4all-falcon-q4_0.bin"
+            + " is downloaded to "
+            + gpt4all_chat.get_save_path(),
+            message,
+        )
 
-        check_download_all_ready = gpt4all_chat.download_model("ggml-model-gpt4all-falcon-q4_0.bin")
+        check_download_all_ready = gpt4all_chat.download_model(
+            "ggml-model-gpt4all-falcon-q4_0.bin"
+        )
 
         message = "Given model is as all ready downloaded was expected."
 
@@ -135,7 +140,7 @@ class GptChatApiTest(unittest.TestCase):
 
         local_models = os.listdir(save_path)
 
-        msg = 'the listed models are unequal to the models in the cache.'
+        msg = "the listed models are unequal to the models in the cache."
 
         self.assertEqual(gpt4all_chat.local_models(), local_models, msg)
 
@@ -144,13 +149,13 @@ class GptChatApiTest(unittest.TestCase):
         local_models = os.listdir(save_path)
 
         for model in gpt4all_chat.get_list_of_all_models():
-            self.assertIn(model["filename"], local_models,
-                        msg=f'{model["filename"]} is not downloaded.')
-
-
-
+            self.assertIn(
+                model["filename"],
+                local_models,
+                msg=f'{model["filename"]} is not downloaded.',
+            )
 
 
 # self.assertRaises(ValueError, function_that_raises) expect error
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
