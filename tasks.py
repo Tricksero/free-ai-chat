@@ -8,7 +8,7 @@ import os
 import sys
 import datetime
 import subprocess
-from invoke import task
+from invoke.tasks import task
 from pathlib import Path
 
 PROJECT_NAME = "gpt4all"

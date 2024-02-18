@@ -8,16 +8,18 @@ from . import views
 
 urlpatterns = [
     path(
-        'login',
+        "login",
         LoginView.as_view(
-            template_name ="auth/login.html",
+            template_name="auth/login.html",
             authentication_form=UserLoginForm,
         ),
-        name="login"),
+        name="login",
+    ),
     path(
-        'logout',
+        "logout",
         LogoutView.as_view(
-            template_name ="auth/logout.html",
+            template_name="auth/logout.html",
         ),
-        name="logout"),
+        name="logout",
+    ),
 ]

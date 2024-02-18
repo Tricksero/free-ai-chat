@@ -1,10 +1,12 @@
 import configparser
 from pathlib import Path
+
 BASE_DIR = Path(__file__).resolve().parent
+
 
 class Config:
 
-    def __init__(self, config_file = BASE_DIR / "config.ini") -> None:
+    def __init__(self, config_file=BASE_DIR / "config.ini") -> None:
         """
         Initailisiert die Klasse und die Attribute.
 
@@ -24,11 +26,8 @@ class Config:
             "recive_limit": int(self.config.get("server", "recive_limit")),
         }
 
-
-
     def get_gpt4all_setting(self):
         return {
             "default_model": self.config.get("gpt4all", "default_model"),
             "max_token": self.config.get("gpt4all", "max_token"),
         }
-

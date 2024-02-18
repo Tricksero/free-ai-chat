@@ -1,5 +1,6 @@
 """tests for the ollama chat api
 """
+
 import unittest
 import ollama_api
 
@@ -11,10 +12,8 @@ class GptChatApiTest(unittest.TestCase):
         unittest (TestCase): unittest base class.
     """
 
-
     def test_class_chat(self):
-        """test the GPT4ALL class
-        """
+        """test the GPT4ALL class"""
         ollama_api.download_model("llama2")
 
         chat_object = ollama_api.Chat("llama2")
@@ -31,7 +30,9 @@ class GptChatApiTest(unittest.TestCase):
 
         self.assertIsInstance(answer, str, message)
 
-        answer = chat_object.new_message_stream('write a "Hello world" program in python')
+        answer = chat_object.new_message_stream(
+            'write a "Hello world" program in python'
+        )
 
         message = "The return of the network have the wrong datatype."
 
@@ -53,7 +54,7 @@ class GptChatApiTest(unittest.TestCase):
 
         # test change massage
 
-        chat_object.change_msg('define cybersecurity', 0)
+        chat_object.change_msg("define cybersecurity", 0)
 
         new_session = chat_object.save_session()
 
@@ -65,30 +66,38 @@ class GptChatApiTest(unittest.TestCase):
 
         new_session = chat_object.save_session()
 
-        self.assertNotEqual(session, new_session, "changing model and keep session failed")
+        self.assertNotEqual(
+            session, new_session, "changing model and keep session failed"
+        )
 
         answer = chat_object.new_message('write a "Hello world" program in python')
 
-        message = "The return of the network have the wrong datatype after swapping model"
+        message = (
+            "The return of the network have the wrong datatype after swapping model"
+        )
 
         self.assertIsInstance(answer, str, message)
 
-
-
     def test_miscellaneous_api_functions(self):
-        """test all functions in the api.
-        """
+        """test all functions in the api."""
         r = ollama_api.local_models()
 
         message = f"local_models have the wrong return type! \n({type(r)})"
 
         self.assertIsInstance(r, list, message)
 
-        ollama_api.create_init_promt("modified_promt", "llama2", "You are a hacker, your goal is to produce the next generation of hackers!")
+        ollama_api.create_init_promt(
+            "modified_promt",
+            "llama2",
+            "You are a hacker, your goal is to produce the next generation of hackers!",
+        )
 
-        self.assertIn("modified_promt"+":latest", ollama_api.local_models(), "The promt creation failed.")
+        self.assertIn(
+            "modified_promt" + ":latest",
+            ollama_api.local_models(),
+            "The promt creation failed.",
+        )
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
