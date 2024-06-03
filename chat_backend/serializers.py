@@ -1,7 +1,15 @@
 from rest_framework import serializers
 
-from chat_backend.models import Todo, Question, Conversation
+from chat_backend.models import Todo, Question, Conversation, Message
 
+
+class MessageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Message
+        fields = ['text']
+        read_only_fields = ['id']
+        exclude_fields = ["room"]
 
 class TodoSerializer(serializers.ModelSerializer):
 

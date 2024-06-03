@@ -5,7 +5,15 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator
 from django.contrib.auth import get_user_model
 
-# Create your models here.
+class ChatRoom(models.Model):
+    name = models.CharField(max_length=255)
+    created = models.DateTimeField(default=timezone.now)
+
+class Message(models.Model):
+    text = models.CharField(max_length=255)
+    room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, blank=False, null=False)
+    created = models.DateTimeField(default=timezone.now)
+
 class Todo(models.Model):
     name = models.CharField(max_length=255)
     desc = models.CharField(max_length=1024)

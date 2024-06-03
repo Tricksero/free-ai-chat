@@ -20,6 +20,13 @@
             + roomName
             + '/'
         );
+        console.log("websocket",
+            'ws://'
+            + window.location.host
+            + '/ws/api/'
+            + roomName
+            + '/'
+        )
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);

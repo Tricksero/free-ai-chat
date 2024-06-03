@@ -8,7 +8,7 @@ RUN apt-get update && apt install -y python3.11-venv
 
 WORKDIR /gpt4all
 
-COPY ./setup.sh /setup.sh
+COPY ./setup.sh ./setup.sh
 
 
 EXPOSE 8000
@@ -18,7 +18,7 @@ EXPOSE 8000
 #pip install -r requirements.txt && \
 #python gpt4all_test.py
 RUN python3.11 -m venv venv
-RUN chmod +x /setup.sh
+RUN chmod +x ./setup.sh
 
 
-CMD ["/bin/bash", "-c", "/setup.sh"]
+CMD ["/bin/bash", "-c", "./gpt4all/setup.sh"]

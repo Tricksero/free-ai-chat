@@ -17,7 +17,7 @@ services:
     build:
       context: ./ollama
     ports:
-      - "9000:9000"
+      - "9000:9020"
 
   web:
     build:
@@ -52,6 +52,11 @@ services:
       - POSTGRES_PASSWORD=gpt4all
     ports:
       - "5433:5432"
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
   #web:
     #build:
       #context: .

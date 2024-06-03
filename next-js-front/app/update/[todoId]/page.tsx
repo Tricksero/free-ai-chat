@@ -1,4 +1,4 @@
-// src/app/update/[menuId]/page.js
+// src/app/update/[todoId]/page.js
 
 "use client"
 
@@ -51,7 +51,7 @@ const Page: React.FC<any> = ({ params }) => {
   const onFinish = (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
-    updateTodo(params.menuId, formData)
+    updateTodo(params.todoId, formData)
       .then(() => {
         router.replace("/?action=update");
       })
